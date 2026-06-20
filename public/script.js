@@ -121,6 +121,7 @@ function buildPricing() {
     });
   }
 }
+buildPricing();
 
 /* Demo */
 (function() {
