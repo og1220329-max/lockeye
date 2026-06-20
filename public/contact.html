@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="light only" />
+<meta name="theme-color" content="#FAF7F2" />
+<title>Contact – LockEye</title>
+<meta name="description" content="Questions, feedback, early partnership ideas — send them directly. No support bot, just us. We actually read these." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='47' fill='%23F4F2EC' stroke='%238B1A2E' stroke-width='5'/><rect x='20' y='38' width='27' height='24' rx='6' fill='%231A0E0C'/><rect x='53' y='38' width='27' height='24' rx='6' fill='%231A0E0C'/><circle cx='33.5' cy='50' r='6' fill='%23E0352A'/><circle cx='66.5' cy='50' r='6' fill='%23FF7000'/></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .cf-form { display: flex; flex-direction: column; gap: 14px; }
+  .cf-group { display: flex; flex-direction: column; gap: 6px; }
+  .cf-group label { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); font-weight: 600; }
+  .cf-group input, .cf-group textarea { width: 100%; border: 1.5px solid var(--line); background: #fff; border-radius: 13px; padding: 13px 15px; font-family: var(--body); font-size: 15px; color: var(--ink); outline: none; transition: border-color .15s; resize: vertical; }
+  .cf-group input:focus, .cf-group textarea:focus { border-color: var(--maroon); }
+  .cf-group textarea { min-height: 120px; }
+  .cf-submit { width: 100%; padding: 15px 24px; border: none; border-radius: 13px; background: linear-gradient(110deg,var(--maroon),var(--orange-deep)); color: #fff; font-family: var(--body); font-weight: 600; font-size: 15.5px; cursor: pointer; transition: .18s; min-height: 48px; }
+  .cf-submit:hover { box-shadow: 0 12px 32px rgba(139,26,46,.35); transform: translateY(-1px); }
+  .cf-submit:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+  .cf-error { display: none; font-size: 13px; color: var(--maroon); background: rgba(139,26,46,.08); border: 1px solid rgba(139,26,46,.2); border-radius: 10px; padding: 11px 14px; }
+  .cf-error.show { display: block; }
+  .cf-success { display: none; text-align: center; padding: 28px 20px; background: rgba(31,138,85,.08); border: 1px solid rgba(31,138,85,.25); border-radius: 16px; }
+  .cf-success.show { display: block; }
+  .cf-success svg { margin-bottom: 12px; }
+  .cf-success h4 { font-family: var(--display); font-weight: 700; font-size: 20px; margin-bottom: 6px; color: var(--green); }
+  .cf-success p { font-size: 14px; color: var(--ink-soft); }
+  .contact-full { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; }
+  .contact-sidebar h2 { font-family: var(--display); font-weight: 800; font-size: clamp(30px,4vw,46px); letter-spacing: -.03em; line-height: 1.02; margin: 16px 0 20px; }
+  .contact-sidebar p { font-size: 16.5px; color: #4A3833; line-height: 1.65; margin-bottom: 28px; }
+  @media(max-width:900px){ .contact-full { grid-template-columns: 1fr; gap: 40px; } }
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="loader-badge"><span class="logo-mark" data-size="92" data-ring="1"></span></div>
+  <div class="loader-word">lock<span class="eye">EYE</span></div>
+  <div class="loader-bar"><i></i></div>
+  <div class="loader-tag">Securing your stake&hellip;</div>
+</div>
+
+<header class="nav" id="topNav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="/">
+      <span class="logo-mark" data-size="46" data-ring="1"></span>
+      <div class="brand-text">
+        <div class="brand-name">lock<span class="eye">EYE</span><span class="reg">&reg;</span></div>
+        <div class="brand-tag">Stop paying for a gym you skip</div>
+      </div>
+    </a>
+    <nav class="links" id="navLinks">
+      <a href="/">Home</a>
+      <a href="/how-it-works">How it works</a>
+      <a href="/about">About</a>
+      <a href="/demo">App demo</a>
+      <a href="/savings">Savings</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/contact" class="active">Contact</a>
+    </nav>
+    <div class="nav-right">
+      <span class="btn-free">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#7C6B5C" stroke-width="2"><path d="M12 2 4 6v6c0 5 8 8 8 8s8-3 8-8V6z"/></svg>
+        FREE
+      </span>
+      <a class="btn btn-primary" href="/demo">Try the demo</a>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section style="padding:72px 0 56px;background:#FAF7F2;border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="reveal" style="max-width:600px">
+      <span class="eyebrow"><span class="dot"></span> Contact</span>
+      <h1 style="font-family:var(--display);font-weight:800;font-size:clamp(38px,5.5vw,66px);letter-spacing:-.04em;line-height:.97;color:var(--ink);margin:18px 0 18px">We actually<br>read these.</h1>
+      <p style="font-size:18px;color:#4A3833;line-height:1.6">Questions, feedback, early partnership ideas — send them directly. No support bot, just us.</p>
+    </div>
+  </div>
+</section>
+
+<section class="block" style="border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="contact-full">
+
+      <!-- Sidebar info -->
+      <div class="contact-sidebar reveal">
+        <div class="contact-card" style="background:#fff;border:1px solid var(--line);border-radius:22px;padding:32px;box-shadow:0 4px 10px -2px rgba(42,21,19,.08)">
+          <div class="cc-row">
+            <div class="cc-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8B1A2E" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M2 7l10 7 10-7"/></svg></div>
+            <div>
+              <div class="cc-label">Email support</div>
+              <a class="cc-val" href="mailto:support@lockeye.app" id="displayEmail">support@lockeye.app</a>
+            </div>
+          </div>
+          <div class="cc-divider"></div>
+          <div class="cc-row">
+            <div class="cc-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8B1A2E" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+            <div>
+              <div class="cc-label">Response time</div>
+              <div class="cc-val-plain" id="displayResponse">Usually within 24 hours</div>
+            </div>
+          </div>
+          <div class="cc-divider"></div>
+          <div class="cc-row">
+            <div class="cc-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8B1A2E" stroke-width="2"><path d="M12 3l8 4v5c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V7z"/></svg></div>
+            <div>
+              <div class="cc-label">Partnerships &amp; press</div>
+              <div class="cc-val-plain">Same address, mention it in the subject</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:24px;background:var(--cream-2);border:1px solid var(--line);border-radius:18px;padding:24px 26px">
+          <span class="eyebrow" style="margin-bottom:12px;display:flex"><span class="dot"></span> Quick links</span>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <a href="/how-it-works" style="font-size:14.5px;color:var(--ink);font-weight:500;display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;background:#fff;border:1px solid var(--line);transition:.15s" onmouseover="this.style.borderColor='var(--maroon)'" onmouseout="this.style.borderColor='var(--line)'">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--maroon)" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+              How it works
+            </a>
+            <a href="/demo" style="font-size:14.5px;color:var(--ink);font-weight:500;display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;background:#fff;border:1px solid var(--line);transition:.15s" onmouseover="this.style.borderColor='var(--maroon)'" onmouseout="this.style.borderColor='var(--line)'">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--maroon)" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+              Try the app demo
+            </a>
+            <a href="/pricing" style="font-size:14.5px;color:var(--ink);font-weight:500;display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;background:#fff;border:1px solid var(--line);transition:.15s" onmouseover="this.style.borderColor='var(--maroon)'" onmouseout="this.style.borderColor='var(--line)'">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--maroon)" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              See pricing
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact form -->
+      <div class="reveal">
+        <div style="background:#fff;border:1px solid var(--line);border-radius:22px;padding:36px;box-shadow:0 4px 10px -2px rgba(42,21,19,.08)">
+          <div style="margin-bottom:24px">
+            <div style="font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--maroon);font-weight:600;margin-bottom:8px">Send a message</div>
+            <div style="font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:-.01em">We'll get back to you within 24 hours.</div>
+          </div>
+
+          <div id="cf-success" class="cf-success">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1F8A55" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>
+            <h4>Message sent!</h4>
+            <p>Thanks for reaching out. We'll reply within 24 hours.</p>
+          </div>
+
+          <form class="cf-form" id="contactForm">
+            <div class="cf-group">
+              <label for="contactName">Your name</label>
+              <input type="text" id="contactName" name="name" placeholder="Jane Smith" autocomplete="name" required>
+            </div>
+            <div class="cf-group">
+              <label for="contactEmail">Email address</label>
+              <input type="email" id="contactEmail" name="email" placeholder="jane@example.com" autocomplete="email" required>
+            </div>
+            <div class="cf-group">
+              <label for="contactMessage">Message</label>
+              <textarea id="contactMessage" name="message" placeholder="What's on your mind?" required></textarea>
+            </div>
+            <div class="cf-error" id="contactFormError"></div>
+            <button type="submit" class="cf-submit" id="contactBtn">Send a message</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="brand" href="/"><span class="logo-mark" data-size="40" data-ring="1"></span><div class="brand-name" style="margin-left:10px">lock<span class="eye">EYE</span></div></a>
+        <p class="foot-tag">Gym discipline backed by real money. Show up, keep your cash. Skip, and it does some good anyway.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col"><h4>Product</h4><a href="/how-it-works">How it works</a><a href="/about">About</a><a href="/demo">App demo</a><a href="/pricing">Pricing</a></div>
+        <div class="foot-col"><h4>Get in touch</h4><a href="mailto:support@lockeye.app">support@lockeye.app</a><a href="/contact">Contact page</a></div>
+      </div>
+    </div>
+    <div class="foot-bottom"><span>&copy; 2026 LockEye Systems Inc.</span><span>LOCKEYE VERIFIED // v1.1.2</span></div>
+  </div>
+</footer>
+
+<nav class="mobile-tabbar">
+  <a href="/" class="mtb-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg><span>Home</span></a>
+  <a href="/how-it-works" class="mtb-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>How it works</span></a>
+  <a href="/demo" class="mtb-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg><span>Demo</span></a>
+  <a href="/pricing" class="mtb-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span>Pricing</span></a>
+  <a href="/contact" class="mtb-item active"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><span>Contact</span></a>
+</nav>
+
+<div class="toast" id="toast"></div>
+<script src="script.js"></script>
+<script>
+  var form = document.getElementById('contactForm');
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var name = document.getElementById('contactName').value.trim();
+      var email = document.getElementById('contactEmail').value.trim();
+      var message = document.getElementById('contactMessage').value.trim();
+      var errorEl = document.getElementById('contactFormError');
+      var btn = document.getElementById('contactBtn');
+      errorEl.style.display = 'none';
+      if (!name || !email || !message) {
+        errorEl.textContent = 'Please fill all required fields.';
+        errorEl.classList.add('show');
+        return;
+      }
+      btn.disabled = true; btn.textContent = 'Sending...';
+      fetch('/api/contact', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({name,email,message}) })
+        .then(function(r){ return r.json(); })
+        .then(function(data) {
+          if (data.ok || data.success) {
+            form.style.display = 'none';
+            document.getElementById('cf-success').classList.add('show');
+          } else {
+            errorEl.textContent = data.error || 'Something went wrong.';
+            errorEl.classList.add('show');
+          }
+          btn.disabled = false; btn.textContent = 'Send a message';
+        })
+        .catch(function() {
+          errorEl.textContent = 'Network error. Please try again.';
+          errorEl.classList.add('show');
+          btn.disabled = false; btn.textContent = 'Send a message';
+        });
+    });
+  }
+</script>
+</body>
+</html>

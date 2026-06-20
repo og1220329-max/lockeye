@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LockEye Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+/* ── Reset & Variables ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#FAF7F2;--bg-alt:#F4F2EC;--card:#ffffff;--card-hover:#fafbfc;--text:#2A1513;--text-2:#4A3833;--text-3:#7C6B5C;--text-4:#b5a898;--border:#E8E0D4;--border-light:#F4F2EC;--primary:#8B1A2E;--primary-hover:#6D1223;--primary-light:rgba(139,26,46,.08);--primary-subtle:rgba(139,26,46,.04);--accent:#FF7000;--accent-light:rgba(255,112,0,.1);--success:#1F8A55;--success-light:rgba(31,138,85,.1);--warning:#f59e0b;--warning-light:rgba(245,158,11,.1);--error:#E0352A;--error-light:rgba(224,53,42,.1);--info:#6366f1;--info-light:rgba(99,102,241,.1);--sidebar-bg:#1A0E0C;--sidebar-hover:rgba(255,255,255,.06);--sidebar-active:rgba(139,26,46,.3);--sidebar-text:rgba(255,255,255,.5);--sidebar-text-active:#fff;--shadow-sm:0 1px 2px rgba(42,21,19,.04);--shadow-md:0 4px 10px -2px rgba(42,21,19,.08);--shadow-lg:0 10px 24px -8px rgba(42,21,19,.12);--shadow-xl:0 24px 60px -16px rgba(42,21,19,.15);--radius-sm:8px;--radius:12px;--radius-md:16px;--radius-lg:20px;--radius-xl:24px;--font:'DM Sans',sans-serif;--display:'Bricolage Grotesque',sans-serif;--mono:'JetBrains Mono',monospace;--sidebar-w:270px;--header-h:72px;--transition:all .2s cubic-bezier(.4,0,.2,1)}
+[data-theme=dark]{--bg:#1A0E0C;--bg-alt:#241412;--card:#241412;--card-hover:#2a1815;--text:#FAF7F2;--text-2:#E8E0D4;--text-3:#7C6B5C;--text-4:#5a4c41;--border:#3A1C18;--border-light:#2a1815;--primary-light:rgba(139,26,46,.2);--primary-subtle:rgba(139,26,46,.1);--accent-light:rgba(255,112,0,.15);--success-light:rgba(31,138,85,.15);--warning-light:rgba(245,158,11,.15);--error-light:rgba(224,53,42,.15);--info-light:rgba(99,102,241,.15);--shadow-sm:0 1px 2px rgba(0,0,0,.2);--shadow-md:0 4px 12px rgba(0,0,0,.3);--shadow-lg:0 12px 32px -8px rgba(0,0,0,.4);--shadow-xl:0 24px 60px -16px rgba(0,0,0,.5)}
+html{font-size:14.5px}body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex;min-height:100vh;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s;overflow:hidden}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--text-4);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--text-3)}
+
+/* ── Sidebar ── */
+.sidebar{width:var(--sidebar-w);background:var(--sidebar-bg);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:50;overflow:hidden;transition:transform .3s cubic-bezier(.4,0,.2,1),width .3s}
+.sidebar-brand{display:flex;align-items:center;gap:12px;padding:16px 20px;height:var(--header-h);border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0}
+.sidebar-logo{width:32px;height:32px;border-radius:8px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sidebar-brand-text{font-family:var(--display);font-weight:800;font-size:22px;letter-spacing:-.03em;color:#fff;white-space:nowrap}
+.sidebar-brand-text .eye{color:var(--accent)}
+.sidebar-brand-sub{font-size:9px;color:rgba(255,255,255,.3);letter-spacing:.12em;text-transform:uppercase;font-family:var(--mono);margin-top:1px}
+.sidebar-menu{flex:1;overflow-y:auto;padding:8px 10px}
+.sidebar-menu::-webkit-scrollbar{width:3px}
+.sidebar-menu::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:2px}
+.nav-section{font-size:9.5px;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:.14em;font-family:var(--mono);padding:16px 12px 6px;font-weight:600}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;margin:1px 0;font-size:13px;font-weight:500;color:var(--sidebar-text);text-decoration:none;border-radius:var(--radius-sm);transition:var(--transition);cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:var(--font);position:relative;white-space:nowrap}
+.nav-item:hover{background:var(--sidebar-hover);color:rgba(255,255,255,.75)}
+.nav-item.active{background:var(--sidebar-active);color:var(--sidebar-text-active);font-weight:600}
+.nav-item.active::before{content:'';position:absolute;left:-10px;top:50%;transform:translateY(-50%);width:3px;height:18px;background:var(--accent);border-radius:0 2px 2px 0}
+.nav-item svg{flex:0 0 auto;opacity:.6;width:18px;height:18px}
+.nav-item.active svg{opacity:1}
+.nav-item .badge{margin-left:auto;background:rgba(255,255,255,.1);color:rgba(255,255,255,.65);font-size:10px;padding:1px 7px;border-radius:999px;font-family:var(--mono);font-weight:500}
+.nav-item.active .badge{background:rgba(139,26,46,.4);color:#fff}
+.sidebar-footer{padding:12px 16px;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.sidebar-footer a,.sidebar-footer button{color:rgba(255,255,255,.35);text-decoration:none;font-size:12px;background:none;border:none;cursor:pointer;font-family:var(--font);transition:var(--transition);display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:var(--radius-sm)}
+.sidebar-footer a:hover,.sidebar-footer button:hover{color:rgba(255,255,255,.7);background:var(--sidebar-hover)}
+
+/* ── Main Layout ── */
+.main-wrap{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;transition:margin .3s}
+
+/* ── Top Header ── */
+.top-header{height:var(--header-h);border-bottom:1px solid var(--border);background:var(--card);display:flex;align-items:center;gap:12px;padding:0 24px;flex-shrink:0;transition:background .3s,border-color .3s}
+.sidebar-toggle{background:none;border:none;color:var(--text-2);cursor:pointer;padding:6px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;transition:var(--transition);flex-shrink:0}
+.sidebar-toggle:hover{background:var(--primary-light);color:var(--primary)}
+.header-search{position:relative;flex:1;max-width:420px}
+.header-search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--text-3)}
+.header-search input{width:100%;padding:8px 12px 8px 34px;border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font);font-size:13px;color:var(--text);outline:none;transition:var(--transition);background:var(--bg-alt)}
+.header-search input:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-light)}
+.header-search .kbd{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--text-3);background:var(--bg-alt);padding:2px 6px;border-radius:4px;border:1px solid var(--border);font-family:var(--mono);pointer-events:none}
+.header-actions{display:flex;align-items:center;gap:6px;margin-left:auto}
+.header-btn{width:36px;height:36px;border-radius:var(--radius);border:1px solid transparent;background:none;color:var(--text-2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--transition);position:relative}
+.header-btn:hover{background:var(--primary-light);color:var(--primary);border-color:rgba(139,26,46,.1)}
+.header-btn .dot{position:absolute;top:7px;right:7px;width:7px;height:7px;border-radius:50%;background:var(--error)}
+.header-btn .count-badge{position:absolute;top:-3px;right:-3px;background:var(--error);color:#fff;font-size:9px;font-weight:600;padding:1px 5px;border-radius:999px;font-family:var(--mono);min-width:16px;text-align:center}
+.user-btn{display:flex;align-items:center;gap:8px;padding:5px 10px 5px 5px;border-radius:var(--radius);border:1px solid var(--border);background:none;cursor:pointer;transition:var(--transition);font-family:var(--font);color:var(--text)}
+.user-btn:hover{background:var(--primary-light);border-color:rgba(139,26,46,.15)}
+.user-avatar{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.user-btn .user-name{font-size:12.5px;font-weight:500}
+
+/* ── Dropdowns ── */
+.dropdown{position:relative}
+.dropdown-menu{position:absolute;top:calc(100% + 6px);right:0;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);box-shadow:var(--shadow-lg);min-width:220px;opacity:0;visibility:hidden;transform:translateY(4px);transition:var(--transition);z-index:100;padding:6px;overflow:hidden}
+.dropdown-menu.open{opacity:1;visibility:visible;transform:none}
+.dropdown-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--radius-sm);font-size:13px;color:var(--text);cursor:pointer;transition:var(--transition);border:none;background:none;width:100%;font-family:var(--font);text-align:left;text-decoration:none}
+.dropdown-item:hover{background:var(--primary-light);color:var(--primary)}
+.dropdown-item svg{color:var(--text-3);flex-shrink:0}
+.dropdown-item:hover svg{color:var(--primary)}
+.dropdown-divider{height:1px;background:var(--border);margin:4px 0}
+.dropdown-header{padding:8px 12px 4px;font-size:10px;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.notif-item{display:flex;gap:12px;padding:10px 12px;border-radius:var(--radius-sm);transition:var(--transition);cursor:pointer}
+.notif-item:hover{background:var(--primary-subtle)}
+.notif-dot{width:8px;height:8px;border-radius:50%;background:var(--primary);flex-shrink:0;margin-top:4px}
+.notif-text{font-size:12.5px;color:var(--text);line-height:1.4}
+.notif-text .hl{font-weight:600}
+.notif-time{font-size:11px;color:var(--text-3);margin-top:2px;font-family:var(--mono)}
+
+/* ── Content Area ── */
+.content-area{flex:1;overflow-y:auto;padding:24px 28px}
+.page-header{margin-bottom:24px}
+.page-header h1{font-family:var(--display);font-size:28px;font-weight:800;letter-spacing:-.03em}
+.page-header .sub{font-size:13.5px;color:var(--text-2);margin-top:4px}
+.page-section{display:none;animation:pageIn .3s ease}
+.page-section.active{display:block}
+@keyframes pageIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ── Stats Grid ── */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.stat-card{background:var(--card);border-radius:var(--radius-lg);padding:22px 24px;border:1px solid var(--border);position:relative;overflow:hidden;transition:var(--transition)}
+.stat-card:hover{border-color:transparent;box-shadow:var(--shadow-md);transform:translateY(-1px)}
+.stat-card .stat-bg{position:absolute;top:-40%;right:-30%;width:160px;height:160px;border-radius:50%;opacity:.08;pointer-events:none;transition:transform .5s ease}
+.stat-card:hover .stat-bg{transform:scale(1.2)}
+.stat-card.loading .stat-num,.stat-card.loading .stat-change,.stat-card.loading .stat-label{color:transparent!important;border-radius:4px;background:linear-gradient(90deg,var(--border-light) 25%,var(--border) 50%,var(--border-light) 75%);background-size:200% 100%;animation:skel 1.5s ease infinite;display:inline-block;pointer-events:none}
+.stat-card.loading .stat-num{width:60px;height:32px}
+.stat-card.loading .stat-label{width:100px;height:14px;margin-top:6px}
+.stat-card.loading .stat-change{width:80px;height:18px;margin-top:10px}
+.stat-card.loading .stat-icon{opacity:0}
+.stat-card .stat-icon{width:38px;height:38px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;margin-bottom:14px;position:relative}
+.stat-card .stat-icon svg{width:17px;height:17px}
+.stat-card .stat-num{font-family:var(--display);font-size:34px;font-weight:800;letter-spacing:-.04em;line-height:1.1;position:relative}
+.stat-card .stat-label{font-size:12px;color:var(--text-2);font-weight:500;margin-top:2px;position:relative}
+.stat-card .stat-change{font-size:11.5px;margin-top:6px;display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:999px;font-weight:500;position:relative}
+.stat-card .stat-change.up{background:var(--success-light);color:var(--success)}
+.stat-card .stat-change.down{background:var(--error-light);color:var(--error)}
+
+/* ── Dashboard Grid ── */
+.dash-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:20px;margin-bottom:20px}
+.dash-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
+
+/* ── Cards ── */
+.card{background:var(--card);border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden;transition:var(--transition)}
+.card:hover{box-shadow:var(--shadow-sm)}
+.card-header{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--border-light);font-size:12px;font-weight:600;color:var(--text-2);text-transform:uppercase;letter-spacing:.03em;transition:border-color .3s}
+.card-header .actions{display:flex;gap:6px}
+.card-body{padding:20px}
+.card-body-no{padding:0}
+
+/* ── Chart ── */
+.chart-wrap{position:relative;height:240px;padding:8px 4px 0}
+
+/* ── Activity Timeline ── */
+.timeline{display:flex;flex-direction:column;gap:0;padding:4px 0}
+.timeline-item{display:flex;gap:14px;padding:12px 20px;transition:var(--transition);position:relative}
+.timeline-item:hover{background:var(--primary-subtle)}
+.timeline-item::before{content:'';position:absolute;left:31px;top:40px;bottom:0;width:1px;background:var(--border-light)}
+.timeline-item:last-child::before{display:none}
+.timeline-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:4px;position:relative;z-index:1}
+.timeline-content{flex:1;min-width:0}
+.timeline-title{font-size:13px;font-weight:500;color:var(--text)}
+.timeline-desc{font-size:12px;color:var(--text-3);margin-top:1px}
+.timeline-time{font-size:11px;color:var(--text-3);font-family:var(--mono);margin-top:3px}
+
+/* ── Tables ── */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:10px 16px;font-size:11px;font-weight:600;color:var(--text-3);background:var(--bg-alt);border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:.04em;cursor:pointer;user-select:none;white-space:nowrap;transition:color .15s}
+th:hover{color:var(--text)}
+th .sort-icon{display:inline-block;margin-left:4px;opacity:.3}
+th.sorted .sort-icon{opacity:1;color:var(--primary)}
+td{padding:10px 16px;border-bottom:1px solid var(--border-light);font-size:13px;color:var(--text);transition:background .15s}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--primary-subtle)}
+.email-cell{color:var(--primary);font-weight:500;font-size:12.5px}
+.date-cell{font-size:11.5px;color:var(--text-3);font-family:var(--mono)}
+.name-cell{font-weight:600}
+.msg-cell{max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-2);font-size:12.5px}
+
+/* ── Pagination ── */
+.pagination{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-top:1px solid var(--border-light);font-size:12.5px;color:var(--text-2)}
+.pagination .info{font-size:12px}
+.pagination .btns{display:flex;gap:4px}
+.page-btn{width:32px;height:32px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--card);color:var(--text-2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;font-family:var(--font);transition:var(--transition)}
+.page-btn:hover{border-color:var(--primary);color:var(--primary)}
+.page-btn.active{background:var(--primary);border-color:var(--primary);color:#fff}
+.page-btn:disabled{opacity:.3;cursor:not-allowed}
+
+/* ── Buttons ── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--radius-sm);font-family:var(--font);font-size:12.5px;font-weight:500;cursor:pointer;transition:var(--transition);border:1px solid var(--border);background:var(--card);color:var(--text-2)}
+.btn:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-light)}
+.btn-primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+.btn-primary:hover{background:var(--primary-hover);border-color:var(--primary-hover);color:#fff;box-shadow:0 4px 12px rgba(139,26,46,.35)}
+.btn-success{background:var(--success);color:#fff;border-color:var(--success)}
+.btn-success:hover{background:#059669;border-color:#059669;color:#fff}
+.btn-danger{color:var(--error);border-color:rgba(239,68,68,.2)}
+.btn-danger:hover{background:var(--error-light);border-color:var(--error)}
+.btn-ghost{background:transparent;border-color:transparent;color:var(--text-2)}
+.btn-ghost:hover{background:var(--primary-light);color:var(--primary)}
+.btn-sm{padding:6px 10px;font-size:11.5px}
+.btn-xs{padding:4px 7px;font-size:10.5px;border-radius:5px}
+.btn-icon{width:34px;height:34px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-sm)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+/* ── Forms ── */
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:11.5px;font-weight:600;color:var(--text-2);margin-bottom:5px;letter-spacing:.01em}
+.form-group input,.form-group textarea,.form-group select{width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;font-family:var(--font);font-size:13px;color:var(--text);outline:none;transition:var(--transition);background:var(--bg-alt)}
+.form-group input:focus,.form-group textarea:focus{border-color:var(--primary);background:var(--card);box-shadow:0 0 0 3px var(--primary-light)}
+.form-group textarea{resize:vertical;min-height:72px;line-height:1.5}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.form-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:24px;padding-top:18px;border-top:1px solid var(--border);flex-wrap:wrap}
+
+/* ── Search ── */
+.search-wrap{position:relative;flex:1;min-width:140px}
+.search-wrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--text-3)}
+.search-wrap input{width:100%;padding:8px 12px 8px 32px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:var(--font);font-size:13px;color:var(--text);outline:none;transition:var(--transition);background:var(--bg-alt)}
+.search-wrap input:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-light)}
+.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+
+/* ── Feature rows ── */
+.feature-row{display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.feature-row input{flex:1;border:1.5px solid var(--border);border-radius:5px;padding:7px 9px;font-size:12.5px;font-family:var(--font);color:var(--text);outline:none;background:var(--bg-alt)}
+.feature-row input:focus{border-color:var(--primary)}
+
+/* ── Charity cards ── */
+.charity-card-admin{border:1px solid var(--border);border-radius:var(--radius-md);padding:14px;margin-bottom:10px;background:var(--bg-alt);transition:var(--transition)}
+.charity-card-admin:hover{border-color:rgba(139,26,46,.15)}
+.charity-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.charity-header strong{font-size:13.5px}
+
+/* ── Modal ── */
+.modal-overlay{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;visibility:hidden;transition:opacity .25s ease,visibility .25s ease}
+.modal-overlay.open{opacity:1;visibility:visible}
+.modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px)}
+.modal-card{position:relative;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-xl);max-width:420px;width:100%;padding:30px 28px 24px;box-shadow:var(--shadow-xl);transform:translateY(12px) scale(.97);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.modal-overlay.open .modal-card{transform:none}
+.modal-icon{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.modal-icon.danger{background:var(--error-light);color:var(--error)}
+.modal-icon.warning{background:var(--warning-light);color:var(--warning)}
+.modal-card h3{font-size:17px;font-weight:700;letter-spacing:-.01em;margin-bottom:6px}
+.modal-card p{font-size:13.5px;color:var(--text-2);line-height:1.5;margin-bottom:22px}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end}
+.modal-actions .btn{min-width:80px;justify-content:center}
+
+/* ── Skeleton ── */
+.skel{background:linear-gradient(90deg,var(--border-light) 25%,var(--border) 50%,var(--border-light) 75%);background-size:200% 100%;animation:skel 1.5s ease infinite;border-radius:var(--radius-sm)}
+@keyframes skel{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skel-line{height:14px;margin-bottom:10px;width:100%}
+.skel-line.w60{width:60%}
+.skel-line.w40{width:40%}
+.skel-line.w80{width:80%}
+.skel-card{height:100px;border-radius:var(--radius-lg);margin-bottom:16px}
+.skel-table{height:32px;border-radius:var(--radius-sm);margin-bottom:6px}
+
+/* ── Empty State ── */
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 20px;text-align:center}
+.empty-state svg{color:var(--text-4);margin-bottom:12px}
+.empty-state strong{color:var(--text-2);font-size:14px}
+.empty-state p{color:var(--text-3);font-size:12.5px;margin-top:4px;max-width:280px;line-height:1.5}
+
+/* ── Toast ── */
+.toast-container{position:fixed;bottom:24px;right:24px;z-index:300;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{display:flex;align-items:center;gap:10px;padding:13px 18px;border-radius:var(--radius-md);font-size:13px;font-weight:500;color:#fff;box-shadow:var(--shadow-lg);pointer-events:auto;animation:toastIn .3s cubic-bezier(.4,0,.2,1);max-width:380px;backdrop-filter:blur(10px)}
+.toast.success{background:rgba(16,185,129,.95)}
+.toast.error{background:rgba(239,68,68,.95)}
+.toast.info{background:rgba(15,23,42,.92)}
+.toast svg{flex-shrink:0}
+@keyframes toastIn{from{opacity:0;transform:translateX(20px) scale(.95)}to{opacity:1;transform:none}}
+
+/* ── Status widgets ── */
+.status-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.status-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--radius);background:var(--bg-alt);border:1px solid var(--border-light)}
+.status-item .status-indicator{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.status-item .status-indicator.green{background:var(--success);box-shadow:0 0 8px rgba(16,185,129,.4)}
+.status-item .status-indicator.yellow{background:var(--warning);box-shadow:0 0 8px rgba(245,158,11,.4)}
+.status-item .status-indicator.red{background:var(--error);box-shadow:0 0 8px rgba(239,68,68,.4)}
+.status-item .si-name{font-size:12.5px;font-weight:500;color:var(--text)}
+.status-item .si-status{font-size:11px;color:var(--text-3);margin-top:1px}
+.status-item .si-stat{font-size:11px;font-weight:600;font-family:var(--mono);color:var(--text-2);margin-left:auto}
+
+/* ── Responsive ── */
+@media(max-width:1200px){.stats-grid{grid-template-columns:repeat(2,1fr)}.dash-grid{grid-template-columns:1fr}}
+@media(max-width:900px){.dash-grid-2{grid-template-columns:1fr}.form-row,.form-row-3{grid-template-columns:1fr}.header-search .kbd{display:none}}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}.sidebar.open{transform:none}
+  .sidebar-overlay{position:fixed;inset:0;z-index:49;background:rgba(0,0,0,.4);opacity:0;visibility:hidden;transition:opacity .3s}
+  .sidebar-overlay.open{opacity:1;visibility:visible}
+  .main-wrap{margin-left:0}
+  .stats-grid{grid-template-columns:1fr}
+  .top-header{padding:0 16px}
+  .content-area{padding:16px}
+  .user-btn .user-name{display:none}
+}
+@media(max-width:480px){.stat-card{padding:18px}.stat-card .stat-num{font-size:26px}.toolbar{flex-direction:column;align-items:stretch}}
+</style>
+</head>
+<body>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<!-- ── Sidebar ── -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="sidebar-logo">
+      <svg width="18" height="18" viewBox="0 0 100 100"><rect x="18" y="36" width="28" height="26" rx="5" fill="rgba(255,255,255,.2)"/><rect x="54" y="36" width="28" height="26" rx="5" fill="rgba(255,255,255,.2)"/><circle cx="32" cy="49" r="6" fill="#E0352A"/><circle cx="68" cy="49" r="6" fill="#FF7000"/></svg>
+    </div>
+    <div><div class="sidebar-brand-text">lock<span class="eye">EYE</span></div><div class="sidebar-brand-sub">Admin Panel</div></div>
+  </div>
+  <div class="sidebar-menu">
+    <div class="nav-section">Overview</div>
+    <button class="nav-item active" data-page="dashboard" onclick="showPage('dashboard')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      <span>Dashboard</span>
+    </button>
+    <div class="nav-section">Management</div>
+    <button class="nav-item" data-page="waitlist" onclick="showPage('waitlist')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 14l2 2 4-4"/></svg>
+      <span>Waitlist</span>
+      <span class="badge" id="waitlistBadge">0</span>
+    </button>
+    <button class="nav-item" data-page="messages" onclick="showPage('messages')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="8" y1="9" x2="16" y2="9"/><line x1="8" y1="13" x2="14" y2="13"/></svg>
+      <span>Messages</span>
+      <span class="badge" id="messagesBadge">0</span>
+    </button>
+    <div class="nav-section">Content</div>
+    <button class="nav-item" data-page="site" onclick="showPage('site')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+      <span>Site Content</span>
+    </button>
+    <button class="nav-item" data-page="pricing" onclick="showPage('pricing')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      <span>Pricing</span>
+    </button>
+    <div class="nav-section">Configuration</div>
+    <button class="nav-item" data-page="calculator" onclick="showPage('calculator')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="8" y2="10.01"/><line x1="12" y1="10" x2="12" y2="10.01"/><line x1="16" y1="10" x2="16" y2="10.01"/><line x1="8" y1="14" x2="8" y2="14.01"/><line x1="12" y1="14" x2="12" y2="14.01"/><line x1="16" y1="14" x2="16" y2="14.01"/><line x1="8" y1="18" x2="8" y2="18.01"/><line x1="12" y1="18" x2="12" y2="18.01"/><line x1="16" y1="18" x2="16" y2="18.01"/></svg>
+      <span>Calculator</span>
+    </button>
+    <button class="nav-item" data-page="demo" onclick="showPage('demo')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+      <span>Demo Config</span>
+    </button>
+  </div>
+  <div class="sidebar-footer">
+    <a href="/"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>View site</span></a>
+    <button onclick="handleLogout()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span>Logout</span></button>
+  </div>
+</aside>
+
+<!-- ── Main ── -->
+<div class="main-wrap" id="mainWrap">
+  <!-- Header -->
+  <header class="top-header">
+    <button class="sidebar-toggle" onclick="toggleSidebar()" id="sidebarToggle">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="header-search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="globalSearch" placeholder="Search..." oninput="handleGlobalSearch(this.value)">
+      <span class="kbd">&crarr;</span>
+    </div>
+    <div class="header-actions">
+      <button class="header-btn" onclick="toggleTheme()" title="Toggle theme">
+        <svg id="themeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <div class="dropdown" id="notifDropdown">
+        <button class="header-btn" onclick="toggleNotifs(event)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="count-badge" id="notifCount">0</span>
+        </button>
+        <div class="dropdown-menu" id="notifMenu" style="min-width:300px">
+          <div class="dropdown-header">Notifications</div>
+          <div id="notifList"><div style="padding:16px;text-align:center;color:var(--text-3);font-size:12.5px">No new notifications</div></div>
+        </div>
+      </div>
+      <div class="dropdown" id="userDropdown">
+        <button class="user-btn" onclick="toggleUserMenu(event)">
+          <div class="user-avatar">A</div>
+          <span class="user-name">Admin</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="dropdown-menu" id="userMenu">
+          <div style="padding:10px 14px;border-bottom:1px solid var(--border);margin-bottom:4px">
+            <div style="font-size:13px;font-weight:600">Admin</div>
+            <div style="font-size:11.5px;color:var(--text-3);font-family:var(--mono)">admin@lockeye.app</div>
+          </div>
+          <a class="dropdown-item" href="/"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> View site</a>
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item" onclick="handleLogout()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Sign out</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <div class="content-area" id="contentArea">
+
+    <!-- ═══ Dashboard ═══ -->
+    <div class="page-section active" id="page-dashboard">
+      <div class="page-header"><h1>Dashboard</h1><div class="sub" id="greeting"></div></div>
+<div style="display:flex;justify-content:flex-end;margin-top:-20px;margin-bottom:16px"><span style="font-size:11px;color:var(--text-3);font-family:var(--mono)" id="lastUpdated">Loading...</span></div>
+      <div class="stats-grid" id="dashStats">
+        <div class="stat-card"><div class="stat-bg" style="background:var(--primary)"></div><div class="stat-icon" style="background:var(--primary-light);color:var(--primary)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 14l2 2 4-4"/></svg></div><div class="stat-num" id="statWaitlist" style="color:var(--primary)">0</div><div class="stat-label">Total Waitlist</div><div class="stat-change up" id="statChangeWaitlist"></div></div>
+        <div class="stat-card"><div class="stat-bg" style="background:var(--accent)"></div><div class="stat-icon" style="background:var(--accent-light);color:var(--accent)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div><div class="stat-num" id="statTodaySignups" style="color:var(--accent)">0</div><div class="stat-label">Today Signups</div><div class="stat-change up" id="statChangeToday"></div></div>
+        <div class="stat-card"><div class="stat-bg" style="background:var(--success)"></div><div class="stat-icon" style="background:var(--success-light);color:var(--success)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div class="stat-num" id="statMessages" style="color:var(--success)">0</div><div class="stat-label">Total Messages</div><div class="stat-change up" id="statChangeMsg"></div></div>
+        <div class="stat-card"><div class="stat-bg" style="background:var(--info)"></div><div class="stat-icon" style="background:var(--info-light);color:var(--info)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="stat-num" id="statTodayMsg" style="color:var(--info)">0</div><div class="stat-label">Today Messages</div><div class="stat-change up" id="statChangeTodayMsg"></div></div>
+      </div>
+
+      <div class="dash-grid">
+        <div class="card">
+          <div class="card-header"><span>Signups Over Time</span><span class="actions"><button class="btn btn-xs btn-ghost" onclick="refreshChart()">Refresh</button></span></div>
+          <div class="card-body"><div class="chart-wrap"><canvas id="signupChart"></canvas></div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span>System Status</span></div>
+          <div class="card-body">
+            <div class="status-grid">
+              <div class="status-item"><div class="status-indicator green"></div><div><div class="si-name">API Server</div><div class="si-status">Operational</div></div><div class="si-stat">100%</div></div>
+              <div class="status-item"><div class="status-indicator green"></div><div><div class="si-name">Database</div><div class="si-status">Connected</div></div><div class="si-stat">OK</div></div>
+              <div class="status-item"><div class="status-indicator green"></div><div><div class="si-name">Waitlist</div><div class="si-status">Accepting entries</div></div><div class="si-stat" id="statusWaitlist">0</div></div>
+              <div class="status-item"><div class="status-indicator green"></div><div><div class="si-name">Session Store</div><div class="si-status">Memory</div></div><div class="si-stat">Active</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-grid-2">
+        <div class="card">
+          <div class="card-header"><span>Recent Activity</span></div>
+          <div class="timeline" id="activityTimeline"></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span>Latest Signups</span><span class="actions"><a class="btn btn-xs btn-ghost" onclick="showPage('waitlist');return false">View all</a></span></div>
+          <div id="recentSignups"><div class="empty-state"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 14l2 2 4-4"/></svg><strong>No signups yet</strong><p>Waitlist entries will appear here.</p></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ Waitlist ═══ -->
+    <div class="page-section" id="page-waitlist">
+      <div class="page-header"><h1>Waitlist</h1><div class="sub">Manage waitlist signups</div></div>
+      <div class="toolbar">
+        <div class="search-wrap"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" id="waitlistSearch" placeholder="Search by email..." oninput="renderWaitlist()"></div>
+        <button class="btn btn-sm btn-primary" onclick="exportWaitlist()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export CSV</button>
+        <button class="btn btn-sm" onclick="loadWaitlist()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> Refresh</button>
+      </div>
+      <div class="card">
+        <div class="card-header"><span>All Entries</span><span style="font-family:var(--mono);font-size:11.5px;font-weight:400;color:var(--text-3)" id="waitlistTotal">0 entries</span></div>
+        <div class="table-wrap"><table><thead><tr><th style="width:44px" onclick="sortWaitlist('idx')"># <span class="sort-icon">↑↓</span></th><th onclick="sortWaitlist('email')">Email <span class="sort-icon">↑↓</span></th><th onclick="sortWaitlist('source')">Source <span class="sort-icon">↑↓</span></th><th onclick="sortWaitlist('date')">Date <span class="sort-icon">↑↓</span></th><th style="width:80px"></th></tr></thead><tbody id="waitlistBody"></tbody></table></div>
+        <div class="pagination" id="waitlistPagination"><div class="info"></div><div class="btns"></div></div>
+      </div>
+    </div>
+
+    <!-- ═══ Messages ═══ -->
+    <div class="page-section" id="page-messages">
+      <div class="page-header"><h1>Messages</h1><div class="sub">Contact form submissions</div></div>
+      <div class="toolbar">
+        <div class="search-wrap"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" id="messagesSearch" placeholder="Search by name, email, or message..." oninput="renderMessages()"></div>
+        <button class="btn btn-sm" onclick="loadMessages()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> Refresh</button>
+      </div>
+      <div class="card">
+        <div class="card-header"><span>All Messages</span><span style="font-family:var(--mono);font-size:11.5px;font-weight:400;color:var(--text-3)" id="messagesTotal">0 messages</span></div>
+        <div class="table-wrap"><table><thead><tr><th style="width:36px" onclick="sortMessages('idx')"># <span class="sort-icon">↑↓</span></th><th onclick="sortMessages('name')">Name <span class="sort-icon">↑↓</span></th><th onclick="sortMessages('email')">Email <span class="sort-icon">↑↓</span></th><th>Message</th><th onclick="sortMessages('date')">Date <span class="sort-icon">↑↓</span></th><th style="width:80px"></th></tr></thead><tbody id="messagesBody"></tbody></table></div>
+        <div class="pagination" id="messagesPagination"><div class="info"></div><div class="btns"></div></div>
+      </div>
+    </div>
+
+    <!-- ═══ Site Content ═══ -->
+    <div class="page-section" id="page-site">
+      <div class="page-header"><h1>Site Content</h1><div class="sub">Edit hero, about, and contact sections</div></div>
+      <div class="dash-grid-2">
+        <div class="card">
+          <div class="card-header"><span>Hero Section</span></div>
+          <div class="card-body">
+            <div class="form-group"><label>Badge Text</label><input type="text" id="sHeroBadge"></div>
+            <div class="form-group"><label>Title Line 1</label><input type="text" id="sHeroTitle1"></div>
+            <div class="form-group"><label>Title Line 2</label><input type="text" id="sHeroTitle2"></div>
+            <div class="form-group"><label>Subtitle</label><textarea id="sHeroSub" rows="2"></textarea></div>
+            <div class="form-group"><label>Assurances (comma separated)</label><input type="text" id="sHeroAssurances"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span>About &amp; Contact</span></div>
+          <div class="card-body">
+            <div class="form-group"><label>About Headline</label><input type="text" id="sAboutHeadline"></div>
+            <div class="form-group"><label>About Body</label><textarea id="sAboutBody" rows="3"></textarea></div>
+            <div class="form-row">
+              <div class="form-group"><label>Contact Email</label><input type="email" id="sContactEmail"></div>
+              <div class="form-group"><label>Response Time</label><input type="text" id="sContactResponse"></div>
+            </div>
+            <div class="form-group"><label>Waitlist Total Spots</label><input type="number" id="sTotalSpots"></div>
+          </div>
+        </div>
+      </div>
+      <div class="form-actions"><button class="btn" onclick="loadSettings()">Reset</button><button class="btn btn-primary" id="saveSiteBtn" onclick="saveSiteSettings()">Save Changes</button></div>
+    </div>
+
+    <!-- ═══ Pricing ═══ -->
+    <div class="page-section" id="page-pricing">
+      <div class="page-header"><h1>Pricing Plans</h1><div class="sub">Manage Free and Pro plan details</div></div>
+      <div class="dash-grid-2">
+        <div class="card">
+          <div class="card-header"><span>Free Plan</span></div>
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group"><label>Plan Name</label><input type="text" id="pFreeName"></div>
+              <div class="form-group"><label>Price ($)</label><input type="number" id="pFreePrice" step="0.01"></div>
+            </div>
+            <div class="form-group"><label>Description</label><textarea id="pFreeDesc" rows="2"></textarea></div>
+            <div class="form-group"><label>Features</label><div id="pFreeFeatures"></div><button class="btn btn-sm" onclick="addFeature('free')">+ Add feature</button></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span>Pro Plan</span></div>
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group"><label>Plan Name</label><input type="text" id="pProName"></div>
+              <div class="form-group"><label>Price ($)</label><input type="number" id="pProPrice" step="0.01"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Original Price ($)</label><input type="number" id="pProOrig" step="0.01"></div>
+              <div class="form-group"><label>Founder Limit</label><input type="number" id="pProLimit"></div>
+            </div>
+            <div class="form-group"><label>Description</label><textarea id="pProDesc" rows="2"></textarea></div>
+            <div class="form-group"><label>Features</label><div id="pProFeatures"></div><button class="btn btn-sm" onclick="addFeature('pro')">+ Add feature</button></div>
+          </div>
+        </div>
+      </div>
+      <div class="form-actions"><button class="btn" onclick="loadSettings()">Reset</button><button class="btn btn-primary" id="savePricingBtn" onclick="savePricing()">Save Changes</button></div>
+    </div>
+
+    <!-- ═══ Calculator ═══ -->
+    <div class="page-section" id="page-calculator">
+      <div class="page-header"><h1>Calculator Settings</h1><div class="sub">Configure savings calculator defaults and ranges</div></div>
+      <div class="card">
+        <div class="card-header"><span>Calculator Configuration</span></div>
+        <div class="card-body">
+          <div class="form-row-3">
+            <div class="form-group"><label>Default Membership ($)</label><input type="number" id="cDefMembership" step="5"></div>
+            <div class="form-group"><label>Default Intend /week</label><input type="number" id="cDefIntend" min="1" max="7"></div>
+            <div class="form-group"><label>Default Actual /week</label><input type="number" id="cDefActual" min="1" max="7"></div>
+          </div>
+          <div class="form-row-3">
+            <div class="form-group"><label>Membership Min ($)</label><input type="number" id="cMin"></div>
+            <div class="form-group"><label>Membership Max ($)</label><input type="number" id="cMax"></div>
+            <div class="form-group"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Free Recovery Rate</label><input type="number" id="cFreeRate" step="0.01" min="0" max="1"></div>
+            <div class="form-group"><label>Pro Recovery Rate</label><input type="number" id="cProRate" step="0.01" min="0" max="1"></div>
+          </div>
+        </div>
+      </div>
+      <div class="form-actions"><button class="btn" onclick="loadSettings()">Reset</button><button class="btn btn-primary" id="saveCalcBtn" onclick="saveCalculator()">Save Changes</button></div>
+    </div>
+
+    <!-- ═══ Demo Config ═══ -->
+    <div class="page-section" id="page-demo">
+      <div class="page-header"><h1>Demo Configuration</h1><div class="sub">Configure the interactive app demo</div></div>
+      <div class="card">
+        <div class="card-header"><span>Demo Settings</span></div>
+        <div class="card-body">
+          <div class="form-group" style="max-width:280px"><label>Default Stake ($)</label><input type="number" id="dDefStake"></div>
+          <div class="form-group"><label>Charities</label><div id="dCharitiesList"></div><button class="btn btn-sm" onclick="addCharity()">+ Add charity</button></div>
+        </div>
+      </div>
+      <div class="form-actions"><button class="btn" onclick="loadSettings()">Reset</button><button class="btn btn-primary" id="saveDemoBtn" onclick="saveDemo()">Save Changes</button></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Confirmation Modal ── -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-backdrop" onclick="closeModal()"></div>
+  <div class="modal-card">
+    <div class="modal-icon danger" id="modalIcon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    </div>
+    <h3 id="modalTitle">Confirm action</h3>
+    <p id="modalDesc">Are you sure you want to do this?</p>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-danger" id="modalConfirmBtn" onclick="confirmAction()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Toast ── -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// ── State ──
+let settings = {}, waitlistData = [], messagesData = [], currentPage = 'dashboard';
+let freeFeatures = [], proFeatures = [], charities = [];
+let waitlistSort = { key: 'date', dir: -1 }, messagesSort = { key: 'date', dir: -1 };
+let waitlistPage = 1, messagesPage = 1, perPage = 10;
+let modalCallback = null;
+let chartInstance = null;
+
+// ── Theme ──
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme');
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('adminTheme', next);
+  updateThemeIcon(next);
+}
+function updateThemeIcon(theme) {
+  const el = document.getElementById('themeIcon');
+  if (!el) return;
+  el.innerHTML = theme === 'dark'
+    ? '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>'
+    : '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+}
+function initTheme() {
+  const saved = localStorage.getItem('adminTheme') || 'light';
+  document.documentElement.setAttribute('data-theme', saved);
+  updateThemeIcon(saved);
+}
+
+// ── Sidebar ──
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+}
+
+// ── Dropdowns ──
+document.addEventListener('click', function(e) {
+  document.querySelectorAll('.dropdown-menu.open').forEach(m => {
+    const parent = m.closest('.dropdown');
+    if (parent && !parent.contains(e.target)) m.classList.remove('open');
+  });
+});
+function toggleNotifs(e) { e.stopPropagation(); document.getElementById('notifMenu').classList.toggle('open'); document.getElementById('userMenu').classList.remove('open'); }
+function toggleUserMenu(e) { e.stopPropagation(); document.getElementById('userMenu').classList.toggle('open'); document.getElementById('notifMenu').classList.remove('open'); }
+
+// ── Global Search ──
+function handleGlobalSearch(val) {
+  const q = val.toLowerCase().trim();
+  if (!q) return;
+  const pages = { dashboard:'Dashboard', waitlist:'Waitlist', messages:'Messages', site:'Site Content', pricing:'Pricing', calculator:'Calculator', demo:'Demo Config' };
+  for (const [key, name] of Object.entries(pages)) {
+    if (name.toLowerCase().includes(q)) { showPage(key); document.getElementById('globalSearch').value = ''; showToast('Navigated to ' + name, 'info'); return; }
+  }
+  if (q === 'dash' || q === 'home') { showPage('dashboard'); document.getElementById('globalSearch').value = ''; }
+}
+
+// ── Auth ──
+async function checkAuth() {
+  try { const r = await fetch('/api/admin/auth'); const d = await r.json(); if (!d.authenticated) window.location.href = '/admin/login'; }
+  catch { window.location.href = '/admin/login'; }
+}
+
+// ── Greeting ──
+function setGreeting() {
+  const h = new Date().getHours();
+  const g = h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
+  const msgs = ['Ready to review some data?', 'Your site at a glance.', 'Everything running smoothly.', 'Here\'s what happened today.'];
+  document.getElementById('greeting').textContent = g + '. ' + msgs[Math.floor(Math.random() * msgs.length)];
+}
+
+// ── Pages ──
+function showPage(name) {
+  currentPage = name;
+  document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const navBtn = document.querySelector(`.nav-item[data-page="${name}"]`);
+  if (navBtn) navBtn.classList.add('active');
+  const titles = { dashboard:'Dashboard', waitlist:'Waitlist', messages:'Messages', site:'Site Content', pricing:'Pricing Plans', calculator:'Calculator Settings', demo:'Demo Config' };
+  const h1 = document.querySelector('.page-header h1');
+  if (h1 && document.getElementById('page-' + name).querySelector('.page-header h1')) {} // title is in HTML
+  if (window.innerWidth <= 768) { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('open'); }
+  if (name === 'dashboard') loadDashboard();
+  if (name === 'waitlist') loadWaitlist();
+  if (name === 'messages') loadMessages();
+  if (['site','pricing','calculator','demo'].includes(name)) loadSettings();
+}
+
+// ── Modal ──
+function showModal(title, desc, btnText, callback) {
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalDesc').textContent = desc;
+  const btn = document.getElementById('modalConfirmBtn');
+  btn.textContent = btnText || 'Delete';
+  modalCallback = callback;
+  document.getElementById('confirmModal').classList.add('open');
+}
+function closeModal() { document.getElementById('confirmModal').classList.remove('open'); modalCallback = null; }
+function confirmAction() { if (modalCallback) modalCallback(); closeModal(); }
+
+// ── Toast ──
+function showToast(msg, type) {
+  const c = document.getElementById('toastContainer');
+  const icons = { success:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>', error:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>', info:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>' };
+  const t = document.createElement('div'); t.className = 'toast ' + (type||'info'); t.innerHTML = (icons[type]||icons.info) + msg;
+  c.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity .3s'; setTimeout(() => t.remove(), 300); }, 3200);
+}
+
+// ── Dashboard ──
+async function loadDashboard() {
+  document.querySelectorAll('.stat-card').forEach(c => c.classList.add('loading'));
+  try {
+    const r = await fetch('/api/admin/stats'); const d = await r.json();
+    updateStatNumbers(d);
+  } catch { showToast('Failed to load stats', 'error'); }
+
+  try {
+    const w = await fetch('/api/admin/waitlist'); waitlistData = await w.json();
+    const recent = waitlistData.slice(-6).reverse();
+    if (recent.length) {
+      document.getElementById('recentSignups').innerHTML = '<div class="table-wrap"><table><thead><tr><th>Email</th><th>Date</th></tr></thead><tbody>'
+        + recent.map(e => '<tr><td class="email-cell">' + esc(e.email) + '</td><td class="date-cell">' + fmtDate(e.createdAt) + '</td></tr>').join('') + '</tbody></table></div>';
+    }
+      const timeline = document.getElementById('activityTimeline');
+      const notifList = document.getElementById('notifList');
+      const activity = [];
+      waitlistData.slice(-10).reverse().forEach(e => activity.push({ type:'signup', title: 'New signup', desc: esc(e.email), time: e.createdAt, color:'var(--primary)' }));
+      try {
+        const m = await fetch('/api/admin/contacts'); messagesData = await m.json();
+        messagesData.slice(-10).reverse().forEach(e => activity.push({ type:'message', title: 'New message from ' + esc(e.name), desc: esc(e.message).substring(0,60), time: e.createdAt, color:'var(--success)' }));
+      } catch {}
+      activity.sort((a,b) => new Date(b.time) - new Date(a.time)).slice(0,10);
+      timeline.innerHTML = activity.length
+        ? activity.map(a => '<div class="timeline-item"><div class="timeline-dot" style="background:'+a.color+'"></div><div class="timeline-content"><div class="timeline-title">'+a.title+'</div><div class="timeline-desc">'+a.desc+'</div><div class="timeline-time">'+fmtDate(a.time)+'</div></div></div>').join('')
+        : '<div class="empty-state"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><strong>No activity yet</strong><p>Recent actions will appear here.</p></div>';
+      notifList.innerHTML = activity.length
+        ? activity.slice(0,5).map(a => '<div class="notif-item"><div class="notif-dot" style="background:'+a.color+'"></div><div><div class="notif-text"><span class="hl">'+a.title+'</span></div><div class="notif-time">'+fmtDate(a.time)+'</div></div></div>').join('')
+        : '<div style="padding:16px;text-align:center;color:var(--text-3);font-size:12.5px">No new notifications</div>';
+    } catch {}
+    buildChart();
+}
+
+function updateStatNumbers(d) {
+  document.querySelectorAll('.stat-card').forEach(c => c.classList.remove('loading'));
+  animateNum('statWaitlist', d.totalWaitlist);
+  animateNum('statTodaySignups', d.todaySignups);
+  animateNum('statMessages', d.totalMessages);
+  animateNum('statTodayMsg', d.todayMessages);
+  document.getElementById('statChangeWaitlist').textContent = d.totalSpots ? (d.totalWaitlist/d.totalSpots*100).toFixed(1) + '% of ' + d.totalSpots + ' spots' : '—';
+  document.getElementById('statChangeToday').textContent = d.todaySignups + ' today';
+  document.getElementById('statChangeMsg').textContent = d.totalMessages > 0 ? d.totalMessages + ' total' : 'No messages';
+  document.getElementById('statChangeTodayMsg').textContent = d.todayMessages > 0 ? d.todayMessages + ' today' : 'No new today';
+  document.getElementById('statusWaitlist').textContent = d.totalWaitlist + '/' + (d.totalSpots||'∞');
+  const wb = document.getElementById('waitlistBadge'); if (wb) wb.textContent = d.totalWaitlist;
+  const mb = document.getElementById('messagesBadge'); if (mb) mb.textContent = d.totalMessages;
+  const nb = document.getElementById('notifCount'); if (nb) nb.textContent = d.todayMessages + d.todaySignups;
+  const lu = document.getElementById('lastUpdated'); if (lu) lu.textContent = 'Last updated ' + new Date().toLocaleTimeString();
+}
+
+function animateNum(id, target) {
+  const el = document.getElementById(id); if (!el) return;
+  const start = parseInt(el.textContent) || 0;
+  if (start === target) return;
+  let current = start;
+  const step = Math.max(1, Math.ceil((target - start) / 30));
+  const interval = setInterval(() => {
+    current += step;
+    if ((step > 0 && current >= target) || (step < 0 && current <= target)) { current = target; clearInterval(interval); }
+    el.textContent = current;
+  }, 25);
+}
+
+function buildChart() {
+  const ctx = document.getElementById('signupChart');
+  if (!ctx) return;
+  if (chartInstance) { chartInstance.destroy(); }
+  const days = 14;
+  const labels = [];
+  const data = [];
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    labels.push(d.toLocaleDateString('en-US', { month:'short', day:'numeric' }));
+    const dayStr = d.toISOString().slice(0,10);
+    data.push(waitlistData.filter(e => e.createdAt && e.createdAt.slice(0,10) === dayStr).length);
+  }
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const gridColor = isDark ? 'rgba(255,255,255,.06)' : 'rgba(0,0,0,.06)';
+  const textColor = isDark ? '#94a3b8' : '#64748b';
+  chartInstance = new Chart(ctx, {
+    type: 'line',
+    data: { labels, datasets: [{
+      label: 'Signups',
+      data,
+      borderColor: '#8B1A2E',
+      backgroundColor: 'rgba(139,26,46,.08)',
+      borderWidth: 2.5,
+      fill: true,
+      tension: .4,
+      pointRadius: 3,
+      pointBackgroundColor: '#8B1A2E',
+      pointBorderColor: '#fff',
+      pointBorderWidth: 1.5,
+      pointHoverRadius: 5
+    }]},
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 10, family:'Inter' } } },
+        y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: textColor, font: { size: 10, family:'Inter' }, stepSize: 1 } }
+      },
+      interaction: { intersect: false, mode: 'index' }
+    }
+  });
+}
+function refreshChart() { if (chartInstance) chartInstance.destroy(); buildChart(); }
+
+// ── Waitlist ──
+async function loadWaitlist() {
+  try { const r = await fetch('/api/admin/waitlist'); waitlistData = await r.json(); waitlistPage = 1; renderWaitlist(); }
+  catch { showToast('Failed to load waitlist', 'error'); }
+}
+function sortWaitlist(key) {
+  if (waitlistSort.key === key) waitlistSort.dir *= -1; else { waitlistSort.key = key; waitlistSort.dir = 1; }
+  renderWaitlist();
+}
+function renderWaitlist() {
+  const q = (document.getElementById('waitlistSearch').value||'').toLowerCase();
+  let f = q ? waitlistData.filter(e => e.email.toLowerCase().includes(q)) : [...waitlistData];
+  const s = waitlistSort;
+  f.sort((a,b) => {
+    let va = s.key === 'email' ? a.email : s.key === 'source' ? (a.source||'') : s.key === 'idx' ? waitlistData.indexOf(a) : (a.createdAt||'');
+    let vb = s.key === 'email' ? b.email : s.key === 'source' ? (b.source||'') : s.key === 'idx' ? waitlistData.indexOf(b) : (b.createdAt||'');
+    if (s.key === 'date') return (va > vb ? 1 : -1) * s.dir;
+    return String(va).localeCompare(String(vb)) * s.dir;
+  });
+  const total = f.length;
+  const totalPages = Math.max(1, Math.ceil(total / perPage));
+  if (waitlistPage > totalPages) waitlistPage = totalPages;
+  const start = (waitlistPage - 1) * perPage;
+  const page = f.slice(start, start + perPage);
+  document.getElementById('waitlistTotal').textContent = total + ' entries';
+  const b = document.getElementById('waitlistBody');
+  if (!page.length) { b.innerHTML = '<tr><td colspan="5"><div class="empty-state"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><strong>' + (q ? 'No matching entries' : 'No entries yet') + '</strong><p>' + (q ? 'Try a different search term.' : 'Waitlist signups will appear here.') + '</p></div></td></tr>'; renderPagination('waitlist', totalPages); return; }
+  b.innerHTML = page.map((e,i) => '<tr><td style="color:var(--text-3);font-family:var(--mono);font-size:11.5px">' + (start+i+1) + '</td><td class="email-cell">' + esc(e.email) + '</td><td style="font-size:12px;color:var(--text-3)">' + esc(e.source||'direct') + '</td><td class="date-cell">' + fmtDate(e.createdAt) + '</td><td><button class="btn btn-xs btn-danger" onclick="confirmDeleteWaitlist(' + (start+i) + ')">Delete</button></td></tr>').join('');
+  document.querySelectorAll('#page-waitlist th').forEach(th => { th.classList.toggle('sorted', th.textContent.toLowerCase().includes(waitlistSort.key === 'idx' ? '#' : waitlistSort.key)); });
+  renderPagination('waitlist', totalPages);
+}
+function confirmDeleteWaitlist(idx) {
+  showModal('Delete waitlist entry', 'Remove ' + waitlistData[idx].email + ' from the waitlist? This cannot be undone.', 'Delete', async () => {
+    try { await fetch('/api/admin/waitlist/' + idx, {method:'DELETE'}); showToast('Entry deleted', 'success'); loadWaitlist(); loadDashboard(); }
+    catch { showToast('Failed to delete', 'error'); }
+  });
+}
+function exportWaitlist() {
+  if (!waitlistData.length) { showToast('No data to export', 'error'); return; }
+  let csv = 'Email,Source,Date\n' + waitlistData.map(e => '"'+e.email+'","'+(e.source||'direct')+'","'+(e.createdAt||'')+'"').join('\n');
+  const b = new Blob([csv], {type:'text/csv'}); const a = document.createElement('a');
+  a.href = URL.createObjectURL(b); a.download = 'lockeye-waitlist-' + new Date().toISOString().slice(0,10) + '.csv'; a.click();
+  showToast('Exported ' + waitlistData.length + ' entries', 'success');
+}
+
+// ── Messages ──
+async function loadMessages() {
+  try { const r = await fetch('/api/admin/contacts'); messagesData = await r.json(); messagesPage = 1; renderMessages(); }
+  catch { showToast('Failed to load messages', 'error'); }
+}
+function sortMessages(key) {
+  if (messagesSort.key === key) messagesSort.dir *= -1; else { messagesSort.key = key; messagesSort.dir = 1; }
+  renderMessages();
+}
+function renderMessages() {
+  const q = (document.getElementById('messagesSearch').value||'').toLowerCase();
+  let f = q ? messagesData.filter(e => (e.name||'').toLowerCase().includes(q)||(e.email||'').toLowerCase().includes(q)||(e.message||'').toLowerCase().includes(q)) : [...messagesData];
+  const s = messagesSort;
+  f.sort((a,b) => {
+    let va = s.key === 'name' ? a.name : s.key === 'email' ? a.email : s.key === 'idx' ? messagesData.indexOf(a) : (a.createdAt||'');
+    let vb = s.key === 'name' ? b.name : s.key === 'email' ? b.email : s.key === 'idx' ? messagesData.indexOf(b) : (b.createdAt||'');
+    if (s.key === 'date') return (va > vb ? 1 : -1) * s.dir;
+    return String(va).localeCompare(String(vb)) * s.dir;
+  });
+  const total = f.length;
+  const totalPages = Math.max(1, Math.ceil(total / perPage));
+  if (messagesPage > totalPages) messagesPage = totalPages;
+  const start = (messagesPage - 1) * perPage;
+  const page = f.slice(start, start + perPage);
+  document.getElementById('messagesTotal').textContent = total + ' messages';
+  const b = document.getElementById('messagesBody');
+  if (!page.length) { b.innerHTML = '<tr><td colspan="6"><div class="empty-state"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><strong>' + (q ? 'No matching messages' : 'No messages yet') + '</strong><p>' + (q ? 'Try a different search term.' : 'Contact form submissions will appear here.') + '</p></div></td></tr>'; renderPagination('messages', totalPages); return; }
+  b.innerHTML = page.map((e,i) => '<tr><td style="color:var(--text-3);font-family:var(--mono);font-size:11.5px">'+(start+i+1)+'</td><td class="name-cell">'+esc(e.name)+'</td><td class="email-cell">'+esc(e.email)+'</td><td class="msg-cell" title="'+esc(e.message)+'">'+esc(e.message)+'</td><td class="date-cell">'+fmtDate(e.createdAt)+'</td><td><button class="btn btn-xs btn-danger" onclick="confirmDeleteMessage('+(start+i)+')">Delete</button></td></tr>').join('');
+  document.querySelectorAll('#page-messages th').forEach(th => { th.classList.toggle('sorted', th.textContent.toLowerCase().includes(messagesSort.key === 'idx' ? '#' : messagesSort.key)); });
+  renderPagination('messages', totalPages);
+}
+function confirmDeleteMessage(idx) {
+  showModal('Delete message', 'Remove message from ' + messagesData[idx].name + '? This cannot be undone.', 'Delete', async () => {
+    try { await fetch('/api/admin/contacts/' + idx, {method:'DELETE'}); showToast('Message deleted', 'success'); loadMessages(); loadDashboard(); }
+    catch { showToast('Failed to delete', 'error'); }
+  });
+}
+
+// ── Pagination ──
+function renderPagination(type, totalPages) {
+  const container = document.getElementById(type + 'Pagination');
+  if (!container) return;
+  const page = type === 'waitlist' ? waitlistPage : messagesPage;
+  const info = container.querySelector('.info');
+  const btns = container.querySelector('.btns');
+  if (totalPages <= 1) { info.textContent = ''; btns.innerHTML = ''; return; }
+  info.textContent = 'Page ' + page + ' of ' + totalPages;
+  let html = '<button class="page-btn" onclick="goPage(\''+type+'\','+(page-1)+')" '+(page<=1?'disabled':'')+'>&lsaquo;</button>';
+  for (let i = Math.max(1, page-2); i <= Math.min(totalPages, page+2); i++) {
+    html += '<button class="page-btn'+(i===page?' active':'')+'" onclick="goPage(\''+type+'\','+i+')">'+i+'</button>';
+  }
+  html += '<button class="page-btn" onclick="goPage(\''+type+'\','+(page+1)+')" '+(page>=totalPages?'disabled':'')+'>&rsaquo;</button>';
+  btns.innerHTML = html;
+}
+function goPage(type, p) {
+  if (type === 'waitlist') { waitlistPage = p; renderWaitlist(); }
+  else { messagesPage = p; renderMessages(); }
+}
+
+// ── Settings ──
+async function loadSettings() {
+  try { const r = await fetch('/api/admin/settings'); settings = await r.json(); populateSettings(); }
+  catch { showToast('Failed to load settings', 'error'); }
+}
+function populateSettings() {
+  const s = settings;
+  setVal('sHeroBadge', s.hero.badge);
+  setVal('sHeroTitle1', s.hero.title1);
+  setVal('sHeroTitle2', s.hero.title2);
+  setVal('sHeroSub', s.hero.subtitle);
+  setVal('sHeroAssurances', (s.hero.assurances||[]).join(', '));
+  setVal('sAboutHeadline', s.about.headline);
+  setVal('sAboutBody', s.about.body);
+  setVal('sContactEmail', s.contact.email);
+  setVal('sContactResponse', s.contact.responseTime);
+  setVal('sTotalSpots', s.waitlist.totalSpots);
+  setVal('pFreeName', s.pricing.free.name);
+  setVal('pFreePrice', s.pricing.free.price);
+  setVal('pFreeDesc', s.pricing.free.desc);
+  freeFeatures = [...(s.pricing.free.features||[])]; renderFeatures('free');
+  setVal('pProName', s.pricing.pro.name);
+  setVal('pProPrice', s.pricing.pro.price);
+  setVal('pProOrig', s.pricing.pro.originalPrice);
+  setVal('pProLimit', s.pricing.pro.founderLimit);
+  setVal('pProDesc', s.pricing.pro.desc);
+  proFeatures = [...(s.pricing.pro.features||[])]; renderFeatures('pro');
+  setVal('cDefMembership', s.calculator.defaultMembership);
+  setVal('cDefIntend', s.calculator.defaultIntend);
+  setVal('cDefActual', s.calculator.defaultActual);
+  setVal('cMin', s.calculator.membershipMin);
+  setVal('cMax', s.calculator.membershipMax);
+  setVal('cFreeRate', s.calculator.freeRecoveryRate);
+  setVal('cProRate', s.calculator.proRecoveryRate);
+  setVal('dDefStake', s.demo.defaultStake);
+  charities = (s.demo.charities||[]).map(c => ({...c})); renderCharities();
+}
+function setVal(id, val) { const el = document.getElementById(id); if (el) el.value = val; }
+function getVal(id) { const el = document.getElementById(id); return el ? el.value : ''; }
+
+// ── Features ──
+function renderFeatures(plan) {
+  const container = document.getElementById('p' + (plan==='free'?'Free':'Pro') + 'Features');
+  const features = plan === 'free' ? freeFeatures : proFeatures;
+  container.innerHTML = features.map((f,i) =>
+    '<div class="feature-row"><input type="text" value="'+esc(f)+'" onchange="updateFeature(\''+plan+'\','+i+',this.value)"><button class="btn btn-xs" onclick="removeFeature(\''+plan+'\','+i+')">✕</button></div>'
+  ).join('');
+}
+function updateFeature(plan,idx,val) { if (plan==='free') freeFeatures[idx]=val; else proFeatures[idx]=val; }
+function addFeature(plan) { if (plan==='free') freeFeatures.push('New feature'); else proFeatures.push('New feature'); renderFeatures(plan); }
+function removeFeature(plan,idx) { if (plan==='free') freeFeatures.splice(idx,1); else proFeatures.splice(idx,1); renderFeatures(plan); }
+
+// ── Charities ──
+function renderCharities() {
+  const container = document.getElementById('dCharitiesList');
+  container.innerHTML = charities.map((c,i) =>
+    '<div class="charity-card-admin"><div class="charity-header"><strong>'+esc(c.name)+'</strong><button class="btn btn-xs btn-danger" onclick="removeCharity('+i+')">✕</button></div>'+
+    '<div class="form-row" style="margin-bottom:5px"><div class="form-group" style="margin:0"><label>Name</label><input type="text" value="'+esc(c.name)+'" onchange="updateCharity('+i+',\'name\',this.value)"></div>'+
+    '<div class="form-group" style="margin:0"><label>Icon (emoji)</label><input type="text" value="'+esc(c.icon)+'" onchange="updateCharity('+i+',\'icon\',this.value)" style="width:70px"></div></div>'+
+    '<div class="form-group" style="margin:0"><label>Description</label><input type="text" value="'+esc(c.desc)+'" onchange="updateCharity('+i+',\'desc\',this.value)"></div>'+
+    '<div class="form-group" style="margin:4px 0 0"><label>ID</label><input type="text" value="'+esc(c.id)+'" onchange="updateCharity('+i+',\'id\',this.value)" style="font-family:var(--mono);font-size:11.5px;max-width:200px"></div></div>'
+  ).join('');
+}
+function updateCharity(idx,f,v) { charities[idx][f] = v; }
+function addCharity() { charities.push({id:'new-charity',name:'New Charity',desc:'Description',icon:'🌍'}); renderCharities(); }
+function removeCharity(idx) { charities.splice(idx,1); renderCharities(); }
+
+// ── Save functions ──
+async function saveSiteSettings() {
+  const btn = document.getElementById('saveSiteBtn'); btn.disabled=true; btn.textContent='Saving...';
+  try {
+    await fetch('/api/admin/settings', {method:'PUT', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ hero: { badge: getVal('sHeroBadge'), title1: getVal('sHeroTitle1'), title2: getVal('sHeroTitle2'), subtitle: getVal('sHeroSub'), assurances: getVal('sHeroAssurances').split(',').map(s=>s.trim()).filter(Boolean) }, about: { headline: getVal('sAboutHeadline'), body: getVal('sAboutBody') }, contact: { email: getVal('sContactEmail'), responseTime: getVal('sContactResponse') }, waitlist: { totalSpots: parseInt(getVal('sTotalSpots'))||2000 } }) });
+    showToast('Site content saved!', 'success');
+  } catch { showToast('Failed to save', 'error'); }
+  btn.disabled=false; btn.textContent='Save Changes';
+}
+async function savePricing() {
+  const btn = document.getElementById('savePricingBtn'); btn.disabled=true; btn.textContent='Saving...';
+  try {
+    await fetch('/api/admin/settings', {method:'PUT', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ pricing: { free: { name: getVal('pFreeName'), price: parseFloat(getVal('pFreePrice'))||0, desc: getVal('pFreeDesc'), features: freeFeatures }, pro: { name: getVal('pProName'), price: parseFloat(getVal('pProPrice'))||0, originalPrice: parseFloat(getVal('pProOrig'))||0, desc: getVal('pProDesc'), features: proFeatures, founderLimit: parseInt(getVal('pProLimit'))||2000 } } }) });
+    showToast('Pricing saved!', 'success');
+  } catch { showToast('Failed to save', 'error'); }
+  btn.disabled=false; btn.textContent='Save Changes';
+}
+async function saveCalculator() {
+  const btn = document.getElementById('saveCalcBtn'); btn.disabled=true; btn.textContent='Saving...';
+  try {
+    await fetch('/api/admin/settings', {method:'PUT', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ calculator: { defaultMembership: parseFloat(getVal('cDefMembership'))||55, defaultIntend: parseInt(getVal('cDefIntend'))||4, defaultActual: parseInt(getVal('cDefActual'))||2, membershipMin: parseFloat(getVal('cMin'))||10, membershipMax: parseFloat(getVal('cMax'))||200, freeRecoveryRate: parseFloat(getVal('cFreeRate'))||0.7, proRecoveryRate: parseFloat(getVal('cProRate'))||0.9 } }) });
+    showToast('Calculator settings saved!', 'success');
+  } catch { showToast('Failed to save', 'error'); }
+  btn.disabled=false; btn.textContent='Save Changes';
+}
+async function saveDemo() {
+  const btn = document.getElementById('saveDemoBtn'); btn.disabled=true; btn.textContent='Saving...';
+  try {
+    await fetch('/api/admin/settings', {method:'PUT', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ demo: { defaultStake: parseInt(getVal('dDefStake'))||30, charities } }) });
+    showToast('Demo config saved!', 'success');
+  } catch { showToast('Failed to save', 'error'); }
+  btn.disabled=false; btn.textContent='Save Changes';
+}
+
+// ── Logout ──
+async function handleLogout() {
+  try { const r = await fetch('/admin/logout', {method:'POST'}); const d = await r.json(); window.location.href = d.redirect; }
+  catch { window.location.href = '/admin/login'; }
+}
+
+// ── Utils ──
+function esc(s) { if (!s) return ''; const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+function fmtDate(d) { if (!d) return '-'; return new Date(d).toLocaleDateString('en-US', {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'}); }
+
+// ── Keyboard Shortcuts ──
+document.addEventListener('keydown', e => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); document.getElementById('globalSearch').focus(); }
+  if (e.key === 'Escape') { closeModal(); document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open')); }
+  if (!e.metaKey && !e.ctrlKey && !e.altKey && e.key >= '1' && e.key <= '7') {
+    const pages = ['dashboard','waitlist','messages','site','pricing','calculator','demo'];
+    showPage(pages[parseInt(e.key) - 1]);
+  }
+});
+
+// ── Polling ──
+let pollInterval = setInterval(async () => {
+  try { const r = await fetch('/api/admin/stats'); const d = await r.json();
+    const wb = document.getElementById('waitlistBadge'); if (wb) wb.textContent = d.totalWaitlist;
+    const mb = document.getElementById('messagesBadge'); if (mb) mb.textContent = d.totalMessages;
+    const nb = document.getElementById('notifCount'); if (nb) nb.textContent = d.todayMessages + d.todaySignups;
+    if (currentPage === 'dashboard') { updateStatNumbers(d); }
+  } catch {}
+}, 30000);
+
+// ── Init ──
+initTheme();
+checkAuth();
+setGreeting();
+loadDashboard();
+</script>
+</body>
+</html>

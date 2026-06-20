@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="light only" />
+<meta name="theme-color" content="#FAF7F2" />
+<title>About – LockEye</title>
+<meta name="description" content="LockEye is not here to hype you up. It works the way a blunt friend works — it just gets you there, because the alternative costs you real money." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='47' fill='%23F4F2EC' stroke='%238B1A2E' stroke-width='5'/><rect x='20' y='38' width='27' height='24' rx='6' fill='%231A0E0C'/><rect x='53' y='38' width='27' height='24' rx='6' fill='%231A0E0C'/><circle cx='33.5' cy='50' r='6' fill='%23E0352A'/><circle cx='66.5' cy='50' r='6' fill='%23FF7000'/></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .about-big { font-family: var(--display); font-weight: 800; letter-spacing: -.03em; font-size: clamp(38px,5.5vw,66px); line-height:.97; color: var(--ink); margin: 20px 0 28px; }
+  .about-body { font-size: 18px; color: #4A3833; line-height: 1.75; margin-bottom: 22px; max-width: 680px; }
+  .about-body b { color: var(--ink); font-weight: 600; }
+  .about-em { font-family: var(--display); font-weight: 700; font-size: 20px; letter-spacing: -.01em; color: var(--ink); line-height: 1.4; max-width: 660px; padding: 28px 32px; background: var(--cream-2); border-left: 4px solid var(--orange); border-radius: 0 16px 16px 0; margin: 36px 0; }
+  .stat-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin: 52px 0; }
+  .stat-box { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 28px 24px; text-align: center; }
+  .stat-box .num { font-family: var(--display); font-weight: 800; font-size: 44px; letter-spacing: -.04em; background: linear-gradient(110deg,var(--maroon),var(--orange)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .stat-box .lbl { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); margin-top: 8px; }
+  @media(max-width:700px){ .stat-row { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="loader-badge"><span class="logo-mark" data-size="92" data-ring="1"></span></div>
+  <div class="loader-word">lock<span class="eye">EYE</span></div>
+  <div class="loader-bar"><i></i></div>
+  <div class="loader-tag">Securing your stake&hellip;</div>
+</div>
+
+<header class="nav" id="topNav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="/">
+      <span class="logo-mark" data-size="46" data-ring="1"></span>
+      <div class="brand-text">
+        <div class="brand-name">lock<span class="eye">EYE</span><span class="reg">&reg;</span></div>
+        <div class="brand-tag">Stop paying for a gym you skip</div>
+      </div>
+    </a>
+    <nav class="links" id="navLinks">
+      <a href="/">Home</a>
+      <a href="/how-it-works">How it works</a>
+      <a href="/about" class="active">About</a>
+      <a href="/demo">App demo</a>
+      <a href="/savings">Savings</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/contact">Contact</a>
+    </nav>
+    <div class="nav-right">
+      <span class="btn-free">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#7C6B5C" stroke-width="2"><path d="M12 2 4 6v6c0 5 8 8 8 8s8-3 8-8V6z"/></svg>
+        FREE
+      </span>
+      <a class="btn btn-primary" href="/demo">Try the demo</a>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section style="padding:72px 0 80px;background:#FAF7F2;border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="reveal" style="max-width:800px;margin:0 auto;text-align:center">
+      <span class="eyebrow" style="justify-content:center"><span class="dot"></span> Why LockEye exists</span>
+      <h1 class="about-big" style="text-align:center">Not a motivator.<br>A friend who forces the issue.</h1>
+    </div>
+  </div>
+</section>
+
+<section class="block" style="border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div style="max-width:740px;margin:0 auto">
+      <div class="reveal">
+        <p class="about-body">LockEye is not here to hype you up. It does not send cheerful reminders or pretend a streak emoji will change your morning. It works the way a blunt friend works: it does not ask how you feel about the gym, it just gets you there, because the alternative <b>costs you real money.</b></p>
+        <p class="about-body">You already pay for a membership you barely use. That money is gone whether you show up or not. LockEye does not add a new expense, it redirects the one you already have. Show up and the app costs you nothing. Skip, and the stake you set moves to a charity you picked, not into LockEye's pocket beyond the small share that keeps it running.</p>
+
+        <div class="about-em reveal">"The result is simple. The friend who never lets you off the hook also happens to be the friend saving you money every month."</div>
+
+        <p class="about-body">The psychology behind this is decades old: people are more motivated by avoiding a loss than by gaining an equivalent reward. LockEye just applies it where you've needed it most — your relationship with the gym you're already paying for.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap">
+    <div class="stat-row reveal">
+      <div class="stat-box tilt">
+        <div class="num">85%</div>
+        <div class="lbl">Of forfeits go to charity</div>
+      </div>
+      <div class="stat-box tilt">
+        <div class="num">$0</div>
+        <div class="lbl">To app if you show up</div>
+      </div>
+      <div class="stat-box tilt">
+        <div class="num">3×</div>
+        <div class="lbl">More likely to attend with financial stake</div>
+      </div>
+    </div>
+
+    <div style="max-width:740px;margin:0 auto">
+      <div class="reveal">
+        <span class="eyebrow"><span class="dot"></span> The business model</span>
+        <h2 style="font-family:var(--display);font-weight:800;font-size:clamp(28px,4vw,44px);letter-spacing:-.03em;margin:18px 0 22px">We only make money when you skip. So we're incentivised to make you not skip.</h2>
+        <p class="about-body">LockEye's 15% fee only applies when a session is forfeited. When you show up and verify, the app earns nothing. That alignment isn't an accident — it means the app's entire business model is built on reducing the thing that earns it revenue. We win when you win.</p>
+        <div style="margin-top:32px;display:flex;gap:14px;flex-wrap:wrap">
+          <a class="btn btn-hero" href="/how-it-works">See how it works &rarr;</a>
+          <a class="btn btn-ghost" href="/pricing">View pricing</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <div class="final-card reveal">
+      <div class="badge-mark"><span class="logo-mark" data-size="78" data-ring="1"></span></div>
+      <span class="eyebrow"><span class="dot"></span> The deal you make with yourself</span>
+      <h2>Put $30 where your<br>excuses are.</h2>
+      <p>Try the demo with no card. See exactly what a kept day, and a skipped one, does to your wallet.</p>
+      <a class="btn btn-primary" href="/demo">Try the app demo &rarr;</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="brand" href="/"><span class="logo-mark" data-size="40" data-ring="1"></span><div class="brand-name" style="margin-left:10px">lock<span class="eye">EYE</span></div></a>
+        <p class="foot-tag">Gym discipline backed by real money. Show up, keep your cash. Skip, and it does some good anyway.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col"><h4>Product</h4><a href="/how-it-works">How it works</a><a href="/about">About</a><a href="/demo">App demo</a><a href="/pricing">Pricing</a></div>
+        <div class="foot-col"><h4>Get in touch</h4><a href="mailto:support@lockeye.app">support@lockeye.app</a><a href="/contact">Contact page</a></div>
+      </div>
+    </div>
+    <div class="foot-bottom"><span>&copy; 2026 LockEye Systems Inc.</span><span>LOCKEYE VERIFIED // v1.1.2</span></div>
+  </div>
+</footer>
+
+<nav class="mobile-tabbar">
+  <a href="/" class="mtb-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg><span>Home</span></a>
+  <a href="/how-it-works" class="mtb-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>How it works</span></a>
+  <a href="/demo" class="mtb-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg><span>Demo</span></a>
+  <a href="/pricing" class="mtb-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span>Pricing</span></a>
+  <a href="/contact" class="mtb-item active"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><span>Contact</span></a>
+</nav>
+
+<div class="toast" id="toast"></div>
+<script src="script.js"></script>
+</body>
+</html>

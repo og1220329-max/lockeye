@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="light only" />
+<meta name="theme-color" content="#FAF7F2" />
+<title>Savings Calculator – LockEye</title>
+<meta name="description" content="Calculate exactly how much money you're wasting on gym sessions you skip — and how much LockEye can put back in your wallet." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='47' fill='%23F4F2EC' stroke='%238B1A2E' stroke-width='5'/><rect x='20' y='38' width='27' height='24' rx='6' fill='%231A0E0C'/><rect x='53' y='38' width='27' height='24' rx='6' fill='%231A0E0C'/><circle cx='33.5' cy='50' r='6' fill='%23E0352A'/><circle cx='66.5' cy='50' r='6' fill='%23FF7000'/></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .calc-card { background:#fff; border:1px solid var(--line); border-radius:26px; overflow:hidden; box-shadow:0 24px 70px -30px rgba(42,21,19,.14); display:grid; grid-template-columns:1fr 1px 1.4fr; }
+  .calc-sliders { padding:38px 40px; }
+  .calc-divider { background:var(--line); margin:24px 0; }
+  .calc-results { padding:38px 40px; background:var(--cream-2); }
+  .cs-label { font-family:var(--mono); font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:24px; }
+  .cs-block { margin-bottom:28px; }
+  .cs-row { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px; }
+  .cs-row span { font-size:14px; color:var(--ink); font-weight:500; }
+  .cs-val { font-family:var(--display); font-weight:800; font-size:28px; letter-spacing:-.02em; color:var(--maroon); }
+  .cs-val.danger { color:var(--orange); }
+  .cs-range { width:100%; height:6px; border-radius:3px; outline:none; cursor:pointer; -webkit-appearance:none; appearance:none; background:var(--line); }
+  .cs-range::-webkit-slider-thumb { -webkit-appearance:none; width:20px; height:20px; border-radius:50%; background:#fff; border:2.5px solid var(--maroon); box-shadow:0 2px 8px rgba(139,26,46,.2); cursor:pointer; transition:.15s; }
+  .cs-range::-webkit-slider-thumb:hover { transform:scale(1.2); background:var(--maroon); }
+  .cs-range.danger-thumb::-webkit-slider-thumb { border-color:var(--orange); }
+  .cs-range.danger-thumb::-webkit-slider-thumb:hover { background:var(--orange); }
+  .cs-ends { display:flex; justify-content:space-between; font-family:var(--mono); font-size:9.5px; color:var(--ink-soft); margin-top:6px; letter-spacing:.06em; }
+  .cr-card { border-radius:16px; padding:16px 18px; background:#fff; border:1px solid var(--line); margin-bottom:12px; box-shadow:0 1px 2px rgba(42,21,19,.04), 0 2px 6px rgba(42,21,19,.05); }
+  .cr-tag { font-family:var(--mono); font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:4px; display:flex; align-items:center; justify-content:space-between; }
+  .cr-pro-badge { background:var(--orange); color:#fff; font-size:9px; font-weight:700; padding:2px 8px; border-radius:999px; letter-spacing:.04em; }
+  .cr-big { font-family:var(--display); font-weight:800; font-size:36px; letter-spacing:-.03em; line-height:1; transition:all .3s ease; }
+  .cr-bad .cr-big { color:var(--maroon); }
+  .cr-mid .cr-big { color:#1F8A55; }
+  .cr-pro .cr-big { background:linear-gradient(110deg,var(--maroon),var(--orange)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .cr-unit { font-family:var(--mono); font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:10px; }
+  .cr-bar-wrap { height:5px; border-radius:3px; background:var(--line); overflow:hidden; margin-bottom:8px; }
+  .cr-bar { height:100%; border-radius:3px; width:0; transition:width .7s cubic-bezier(.2,.8,.2,1); }
+  .cr-bar-bad { background:linear-gradient(90deg,var(--maroon-deep),var(--maroon)); }
+  .cr-bar-mid { background:linear-gradient(90deg,#1F8A55,#34C87A); }
+  .cr-bar-pro { background:linear-gradient(90deg,var(--maroon),var(--orange),var(--amber)); }
+  .cr-desc { font-size:12.5px; color:var(--ink-soft); line-height:1.55; }
+  .cr-annual { background:var(--cream-2); border:1px solid var(--line); border-radius:12px; padding:12px 16px; font-family:var(--mono); font-size:11.5px; color:var(--ink-soft); line-height:1.6; margin-bottom:20px; }
+  .cr-annual b { color:var(--maroon); font-weight:700; }
+  .reveal-btn { width:100%; padding:18px 24px; border:none; border-radius:15px; background:linear-gradient(110deg,var(--maroon) 0%,var(--orange-deep) 60%,var(--orange) 100%); color:#fff; font-family:var(--display); font-weight:800; font-size:18px; letter-spacing:-.01em; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:12px; transition:box-shadow .2s ease,transform .15s ease; position:relative; overflow:hidden; min-height:44px; }
+  .reveal-btn:hover { box-shadow:0 16px 42px rgba(139,26,46,.4); transform:translateY(-2px); }
+  .reveal-btn:active { transform:scale(.98); }
+  .recalc-btn { width:100%; margin-top:12px; background:transparent; border:1.5px solid var(--line); color:var(--ink-soft); border-radius:11px; padding:11px; font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; cursor:pointer; transition:.15s; min-height:44px; }
+  .recalc-btn:hover { border-color:var(--maroon); color:var(--maroon); }
+  @media(max-width:900px){
+    .calc-card { grid-template-columns:1fr; }
+    .calc-divider { width:calc(100% - 48px); height:1px; margin:0 24px; }
+    .calc-sliders,.calc-results { padding:28px 28px; }
+  }
+  @media(max-width:600px){
+    .calc-sliders,.calc-results { padding:22px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="loader-badge"><span class="logo-mark" data-size="92" data-ring="1"></span></div>
+  <div class="loader-word">lock<span class="eye">EYE</span></div>
+  <div class="loader-bar"><i></i></div>
+  <div class="loader-tag">Securing your stake&hellip;</div>
+</div>
+
+<header class="nav" id="topNav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="/">
+      <span class="logo-mark" data-size="46" data-ring="1"></span>
+      <div class="brand-text">
+        <div class="brand-name">lock<span class="eye">EYE</span><span class="reg">&reg;</span></div>
+        <div class="brand-tag">Stop paying for a gym you skip</div>
+      </div>
+    </a>
+    <nav class="links" id="navLinks">
+      <a href="/">Home</a>
+      <a href="/how-it-works">How it works</a>
+      <a href="/about">About</a>
+      <a href="/demo">App demo</a>
+      <a href="/savings" class="active">Savings</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/contact">Contact</a>
+    </nav>
+    <div class="nav-right">
+      <span class="btn-free">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#7C6B5C" stroke-width="2"><path d="M12 2 4 6v6c0 5 8 8 8 8s8-3 8-8V6z"/></svg>
+        FREE
+      </span>
+      <a class="btn btn-primary" href="/demo">Try the demo</a>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section style="padding:72px 0 64px;background:#FAF7F2;border-bottom:1px solid var(--line);text-align:center">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow" style="justify-content:center"><span class="dot"></span> Savings calculator</span>
+      <h1 style="font-family:var(--display);font-weight:800;font-size:clamp(38px,5.5vw,68px);letter-spacing:-.04em;line-height:.97;color:var(--ink);margin:20px auto 18px;max-width:800px">How much are your<br><span style="background:linear-gradient(100deg,var(--maroon) 0%,var(--orange-deep) 40%,var(--orange) 70%,var(--amber) 100%);-webkit-background-clip:text;background-clip:text;color:transparent">skips actually costing you?</span></h1>
+      <p style="font-size:18px;color:var(--ink-soft);max-width:520px;margin:0 auto">Slide your real numbers. See what you're losing — and how much LockEye puts back.</p>
+    </div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap">
+    <div class="calc-card reveal">
+      <div class="calc-sliders">
+        <div class="cs-label">Your gym numbers</div>
+
+        <div class="cs-block">
+          <div class="cs-row">
+            <span>Monthly membership fee</span>
+            <span class="cs-val" id="sv-fee">$60</span>
+          </div>
+          <input type="range" id="sr-fee" class="cs-range" min="15" max="300" value="60" step="5">
+          <div class="cs-ends"><span>$15</span><span>$300</span></div>
+        </div>
+
+        <div class="cs-block">
+          <div class="cs-row">
+            <span>Sessions planned per month</span>
+            <span class="cs-val" id="sv-intend">12&times;</span>
+          </div>
+          <input type="range" id="sr-intend" class="cs-range" min="4" max="30" value="12" step="1">
+          <div class="cs-ends"><span>4&times;</span><span>30&times;</span></div>
+        </div>
+
+        <div class="cs-block">
+          <div class="cs-row">
+            <span>Sessions you actually attend</span>
+            <span class="cs-val danger" id="sv-actual">6 days</span>
+          </div>
+          <input type="range" id="sr-actual" class="cs-range danger-thumb" min="0" max="30" value="6" step="1">
+          <div class="cs-ends"><span>0</span><span>30</span></div>
+        </div>
+      </div>
+
+      <div class="calc-divider"></div>
+
+      <div class="calc-results">
+        <div id="calc-reveal-area">
+          <button class="reveal-btn" id="calc-reveal-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V4M4 12l8-8 8 8"/></svg>
+            Calculate my waste
+          </button>
+        </div>
+
+        <div id="calc-results-area" style="display:none">
+          <div class="cr-annual" id="cr-annual-box"></div>
+
+          <div class="cr-card cr-bad">
+            <div class="cr-tag">Without LockEye — money just gone</div>
+            <div class="cr-big" id="cr-bad-num">$0</div>
+            <div class="cr-unit">wasted per month</div>
+            <div class="cr-bar-wrap"><div class="cr-bar cr-bar-bad" id="cr-bad-bar"></div></div>
+            <div class="cr-desc">You pay for sessions you don't take. That money evaporates. No accountability, no return.</div>
+          </div>
+
+          <div class="cr-card cr-mid">
+            <div class="cr-tag">LockEye Free — some back</div>
+            <div class="cr-big" id="cr-mid-num">$0</div>
+            <div class="cr-unit">recovered per month</div>
+            <div class="cr-bar-wrap"><div class="cr-bar cr-bar-mid" id="cr-mid-bar"></div></div>
+            <div class="cr-desc">The stake mechanic alone means showing up more. On misses, 70% returns or goes to charity.</div>
+          </div>
+
+          <div class="cr-card cr-pro">
+            <div class="cr-tag">LockEye Pro — maximum recovery <span class="cr-pro-badge">PRO</span></div>
+            <div class="cr-big" id="cr-pro-num">$0</div>
+            <div class="cr-unit">recovered per month</div>
+            <div class="cr-bar-wrap"><div class="cr-bar cr-bar-pro" id="cr-pro-bar"></div></div>
+            <div class="cr-desc">Grace passes, streak multipliers, and 90% recovery on forfeits. Every dollar works harder.</div>
+          </div>
+
+          <button class="recalc-btn" id="calc-recalc-btn">
+            &larr; Recalculate
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <div class="final-card reveal">
+      <div class="badge-mark"><span class="logo-mark" data-size="78" data-ring="1"></span></div>
+      <span class="eyebrow"><span class="dot"></span> The deal you make with yourself</span>
+      <h2>Put $30 where your<br>excuses are.</h2>
+      <p>Try the demo with no card. See exactly what a kept day, and a skipped one, does to your wallet.</p>
+      <a class="btn btn-primary" href="/demo">Try the app demo &rarr;</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="brand" href="/"><span class="logo-mark" data-size="40" data-ring="1"></span><div class="brand-name" style="margin-left:10px">lock<span class="eye">EYE</span></div></a>
+        <p class="foot-tag">Gym discipline backed by real money. Show up, keep your cash. Skip, and it does some good anyway.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col"><h4>Product</h4><a href="/how-it-works">How it works</a><a href="/about">About</a><a href="/demo">App demo</a><a href="/pricing">Pricing</a></div>
+        <div class="foot-col"><h4>Get in touch</h4><a href="mailto:support@lockeye.app">support@lockeye.app</a><a href="/contact">Contact page</a></div>
+      </div>
+    </div>
+    <div class="foot-bottom"><span>&copy; 2026 LockEye Systems Inc.</span><span>LOCKEYE VERIFIED // v1.1.2</span></div>
+  </div>
+</footer>
+
+<nav class="mobile-tabbar">
+  <a href="/" class="mtb-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg><span>Home</span></a>
+  <a href="/how-it-works" class="mtb-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>How it works</span></a>
+  <a href="/demo" class="mtb-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg><span>Demo</span></a>
+  <a href="/pricing" class="mtb-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span>Pricing</span></a>
+  <a href="/contact" class="mtb-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><span>Contact</span></a>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
+<script>
+(function() {
+  var feeEl = document.getElementById('sr-fee');
+  var intendEl = document.getElementById('sr-intend');
+  var actualEl = document.getElementById('sr-actual');
+  var svFee = document.getElementById('sv-fee');
+  var svIntend = document.getElementById('sv-intend');
+  var svActual = document.getElementById('sv-actual');
+
+  function updateLabels() {
+    svFee.textContent = '$' + feeEl.value;
+    svIntend.textContent = intendEl.value + '\u00d7';
+    var a = parseInt(actualEl.value), i = parseInt(intendEl.value);
+    svActual.textContent = a + ' day' + (a !== 1 ? 's' : '');
+    svActual.classList.toggle('danger', a < i);
+    actualEl.max = intendEl.value;
+    if (parseInt(actualEl.value) > parseInt(intendEl.value)) actualEl.value = intendEl.value;
+  }
+
+  function animNum(id, val) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var start = 0, dur = 600, t0 = performance.now();
+    function step(now) {
+      var p = Math.min((now - t0) / dur, 1);
+      var e = 1 - Math.pow(1-p, 3);
+      el.textContent = '$' + Math.round(start + (val - start) * e);
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  function calcAndShow() {
+    var fee = parseFloat(feeEl.value);
+    var intend = parseInt(intendEl.value);
+    var actual = parseInt(actualEl.value);
+    var skipped = Math.max(0, intend - actual);
+    var costPer = fee / intend;
+    var waste = skipped * costPer;
+    var freeR = waste * 0.70;
+    var proR = waste * 0.90;
+    var maxVal = Math.max(waste, freeR, proR, 1);
+
+    document.getElementById('cr-annual-box').innerHTML = 'At this rate, you waste <b>$' + Math.round(waste * 12) + '/yr</b>. With Pro, <b>$' + Math.round(proR * 12) + '/yr</b> comes back.';
+
+    document.getElementById('calc-reveal-area').style.display = 'none';
+    document.getElementById('calc-results-area').style.display = 'block';
+
+    animNum('cr-bad-num', waste);
+    animNum('cr-mid-num', freeR);
+    animNum('cr-pro-num', proR);
+
+    setTimeout(function() {
+      document.getElementById('cr-bad-bar').style.width = Math.min((waste/maxVal)*100, 100) + '%';
+      document.getElementById('cr-mid-bar').style.width = Math.min((freeR/maxVal)*100, 100) + '%';
+      document.getElementById('cr-pro-bar').style.width = Math.min((proR/maxVal)*100, 100) + '%';
+    }, 80);
+  }
+
+  [feeEl, intendEl, actualEl].forEach(function(el) { el.addEventListener('input', updateLabels); });
+  updateLabels();
+
+  document.getElementById('calc-reveal-btn').addEventListener('click', calcAndShow);
+  document.getElementById('calc-recalc-btn').addEventListener('click', function() {
+    document.getElementById('calc-results-area').style.display = 'none';
+    document.getElementById('calc-reveal-area').style.display = 'block';
+    document.getElementById('cr-bad-bar').style.width = '0';
+    document.getElementById('cr-mid-bar').style.width = '0';
+    document.getElementById('cr-pro-bar').style.width = '0';
+  });
+})();
+</script>
+</body>
+</html>

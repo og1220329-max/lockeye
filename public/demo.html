@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="light only" />
+<meta name="theme-color" content="#FAF7F2" />
+<title>App Demo – LockEye</title>
+<meta name="description" content="Walk through the full LockEye experience interactively. Tap through each screen to see exactly how staking, verification, and forfeiting work." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='47' fill='%23F4F2EC' stroke='%238B1A2E' stroke-width='5'/><rect x='20' y='38' width='27' height='24' rx='6' fill='%231A0E0C'/><rect x='53' y='38' width='27' height='24' rx='6' fill='%231A0E0C'/><circle cx='33.5' cy='50' r='6' fill='%23E0352A'/><circle cx='66.5' cy='50' r='6' fill='%23FF7000'/></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="loader">
+  <div class="loader-badge"><span class="logo-mark" data-size="92" data-ring="1"></span></div>
+  <div class="loader-word">lock<span class="eye">EYE</span></div>
+  <div class="loader-bar"><i></i></div>
+  <div class="loader-tag">Securing your stake&hellip;</div>
+</div>
+
+<header class="nav" id="topNav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="/">
+      <span class="logo-mark" data-size="46" data-ring="1"></span>
+      <div class="brand-text">
+        <div class="brand-name">lock<span class="eye">EYE</span><span class="reg">&reg;</span></div>
+        <div class="brand-tag">Stop paying for a gym you skip</div>
+      </div>
+    </a>
+    <nav class="links" id="navLinks">
+      <a href="/">Home</a>
+      <a href="/how-it-works">How it works</a>
+      <a href="/about">About</a>
+      <a href="/demo" class="active">App demo</a>
+      <a href="/savings">Savings</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/contact">Contact</a>
+    </nav>
+    <div class="nav-right">
+      <span class="btn-free">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#7C6B5C" stroke-width="2"><path d="M12 2 4 6v6c0 5 8 8 8 8s8-3 8-8V6z"/></svg>
+        FREE
+      </span>
+      <a class="btn btn-primary" href="/pricing">Get early access</a>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section style="padding:64px 0 48px;background:#FAF7F2;border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="reveal" style="max-width:660px">
+      <span class="eyebrow"><span class="dot"></span> App demo &middot; concept preview</span>
+      <h1 style="font-family:var(--display);font-weight:800;letter-spacing:-.035em;font-size:clamp(38px,5.2vw,64px);line-height:.97;margin:18px 0 20px;color:var(--ink)">Walk through the full experience.</h1>
+      <p style="font-size:17px;color:#4A3833;max-width:520px;line-height:1.65">This is a concept walkthrough, not the final UI. Tap through each screen to see exactly how staking, verification, and forfeiting actually work inside the app.</p>
+    </div>
+  </div>
+</section>
+
+<section class="block demo" style="border-top:none">
+  <div class="wrap">
+    <div class="proto-notice reveal">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+      <span><b>Heads up:</b> this is an interactive concept, not the final look of the app. The real thing is being built. Tap through to see the mechanic.</span>
+    </div>
+
+    <div class="demo-grid">
+      <div class="phone-stage reveal">
+        <div class="phone">
+          <div class="phone-screen" id="demo-screen"></div>
+        </div>
+        <div class="receipt" id="demo-receipt">
+          <div class="h">Session ledger</div>
+          <div class="row"><span>Staked</span><b id="dr-staked">$0</b></div>
+          <div class="row"><span>Outcome</span><b id="dr-outcome" style="color:var(--ink-soft)">Pending</b></div>
+          <div class="row"><span>To charity</span><b id="dr-charity">$0</b></div>
+        </div>
+      </div>
+
+      <div class="demo-controls reveal">
+        <div class="demo-steps-nav" id="demo-steps-nav">
+          <div class="dsn-label">Walk through the flow</div>
+          <div class="dsn-steps" id="dsn-steps"></div>
+        </div>
+
+        <div id="demo-ctrl-content"></div>
+
+        <div class="demo-nav-row">
+          <button class="dn-btn" id="demo-back" style="display:none">&larr; Back</button>
+          <button class="dn-btn dn-primary" id="demo-next">Continue &rarr;</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <div class="final-card reveal">
+      <div class="badge-mark"><span class="logo-mark" data-size="78" data-ring="1"></span></div>
+      <span class="eyebrow"><span class="dot"></span> Ready to commit?</span>
+      <h2>Join the founder list.<br>No card needed yet.</h2>
+      <p>We're rolling out in waves. Get your spot before the first 2,000 founder slots fill up.</p>
+      <a class="btn btn-primary" href="/pricing">See pricing &rarr;</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="brand" href="/"><span class="logo-mark" data-size="40" data-ring="1"></span><div class="brand-name" style="margin-left:10px">lock<span class="eye">EYE</span></div></a>
+        <p class="foot-tag">Gym discipline backed by real money. Show up, keep your cash. Skip, and it does some good anyway.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col"><h4>Product</h4><a href="/how-it-works">How it works</a><a href="/about">About</a><a href="/demo">App demo</a><a href="/pricing">Pricing</a></div>
+        <div class="foot-col"><h4>Get in touch</h4><a href="mailto:support@lockeye.app">support@lockeye.app</a><a href="/contact">Contact page</a></div>
+      </div>
+    </div>
+    <div class="foot-bottom"><span>&copy; 2026 LockEye Systems Inc.</span><span>LOCKEYE VERIFIED // v1.1.2</span></div>
+  </div>
+</footer>
+
+<nav class="mobile-tabbar">
+  <a href="/" class="mtb-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg><span>Home</span></a>
+  <a href="/how-it-works" class="mtb-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>How it works</span></a>
+  <a href="/demo" class="mtb-item active"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg><span>Demo</span></a>
+  <a href="/pricing" class="mtb-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span>Pricing</span></a>
+  <a href="/contact" class="mtb-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><span>Contact</span></a>
+</nav>
+
+<div class="toast" id="toast"></div>
+<script src="script.js"></script>
+</body>
+</html>
